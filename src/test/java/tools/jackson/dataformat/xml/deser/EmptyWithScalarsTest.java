@@ -5,12 +5,13 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectReader;
 import tools.jackson.databind.exc.MismatchedInputException;
 
 import tools.jackson.dataformat.xml.*;
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // [dataformat-xml#474]: no failure for primitives, no null
 public class EmptyWithScalarsTest extends XmlTestUtil
 {
-    @JacksonXmlRootElement(localName = "w")
+    @JsonRootName("w")
     static class NumbersPrimitive {
         public int i = 1;
         public long l = 2L;
@@ -27,7 +28,7 @@ public class EmptyWithScalarsTest extends XmlTestUtil
         public float f = 0.25f;
     }
 
-    @JacksonXmlRootElement(localName = "w")
+    @JsonRootName("w")
     static class NumbersWrapper {
         public Integer I = Integer.valueOf(1);
         public Long L = Long.valueOf(1L);
@@ -36,13 +37,13 @@ public class EmptyWithScalarsTest extends XmlTestUtil
         public Float F = Float.valueOf(0.5f);
     }
 
-    @JacksonXmlRootElement(localName = "w")
+    @JsonRootName("w")
     static class NumbersOther {
         public BigInteger bi = BigInteger.ONE;
         public BigDecimal bd = BigDecimal.ONE;
     }
 
-    @JacksonXmlRootElement(localName = "w")
+    @JsonRootName("w")
     static class MiscOther {
         public Boolean B = Boolean.TRUE;
     }

@@ -6,13 +6,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 import tools.jackson.databind.annotation.JsonDeserialize;
 
 import tools.jackson.dataformat.xml.XmlMapper;
 import tools.jackson.dataformat.xml.XmlTestUtil;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 // [dataformat-xml#646]
 public class IterableCollectionBuilder646Test extends XmlTestUtil
 {
-	@JsonDeserialize(builder = Parent.Builder.class)
-	@JacksonXmlRootElement(localName = "parent")
-	static class Parent {
+    @JsonRootName("parent")
+    @JsonDeserialize(builder = Parent.Builder.class)
+    static class Parent {
 		private final List<Child> children;
 
 		Parent(List<Child> children) {
@@ -53,9 +53,9 @@ public class IterableCollectionBuilder646Test extends XmlTestUtil
 		}
 	}
 
-	@JsonDeserialize(builder = Child.Builder.class)
-	@JacksonXmlRootElement(localName = "child")
-	static class Child {
+    @JsonRootName("child")
+    @JsonDeserialize(builder = Child.Builder.class)
+    static class Child {
 		private final String id;
 
 		public Child(String id) {

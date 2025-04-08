@@ -4,7 +4,7 @@ Project: jackson-dataformat-xml
 === Releases ===
 ------------------------------------------------------------------------
 
-2.19.0 (not yet released)
+2.19.0-rc (07-Apr-2025)
 
 #700: Unify testing structure/tools [JSTEP-10]
  (fix contributed by Joo Hyuk K)
