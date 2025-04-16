@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PolymorphicList576Test extends XmlTestUtil
 {
-    @JacksonXmlRootElement(localName = "wrapper")
+    @JsonRootName("wrapper")
     static class Wrapper extends Base {
 
         @JacksonXmlProperty(localName = "item")
@@ -48,7 +48,7 @@ public class PolymorphicList576Test extends XmlTestUtil
         }
     }
 
-    @JacksonXmlRootElement(localName = "item")
+    @JsonRootName("item")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     static class Item {
 

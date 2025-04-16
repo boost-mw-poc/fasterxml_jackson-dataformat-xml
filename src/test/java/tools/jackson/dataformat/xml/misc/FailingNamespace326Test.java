@@ -8,18 +8,18 @@ import org.junit.jupiter.api.Test;
 
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.ctc.wstx.stax.WstxOutputFactory;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 import tools.jackson.databind.*;
 import tools.jackson.dataformat.xml.*;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 // for [dataformat-xml#326]
 public class FailingNamespace326Test extends XmlTestUtil
 {
-    @JacksonXmlRootElement(localName = "new")
+    @JsonRootName("new")
     static class Bean {
         @JacksonXmlProperty(isAttribute = true)
         public String source="ECOM";

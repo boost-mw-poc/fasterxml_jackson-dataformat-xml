@@ -173,15 +173,23 @@ public class ToXmlGenerator
         _initialized = true;
         try {
             boolean xmlDeclWritten;
-            if (XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures)) {
-                _xmlWriter.writeStartDocument("UTF-8", "1.1");
-                xmlDeclWritten = true;
-            } else if (XmlWriteFeature.WRITE_XML_DECLARATION.enabledIn(_formatFeatures)) {
-                _xmlWriter.writeStartDocument("UTF-8", "1.0");
+
+            if (XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures)
+                    || XmlWriteFeature.WRITE_XML_DECLARATION.enabledIn(_formatFeatures)) {
+
+                String xmlVersion = XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures) ? "1.1" : "1.0";
+                String encoding = "UTF-8";
+
+                if (XmlWriteFeature.WRITE_STANDALONE_YES_TO_XML_DECLARATION.enabledIn(_formatFeatures)) {
+                    _xmlWriter.writeStartDocument(xmlVersion, encoding, true);
+                } else {
+                    _xmlWriter.writeStartDocument(encoding, xmlVersion);
+                }
                 xmlDeclWritten = true;
             } else {
                 xmlDeclWritten = false;
             }
+
             // as per [dataformat-xml#172], try adding indentation
             if (xmlDeclWritten && (_xmlPrettyPrinter != null)) {
                 // ... but only if it is likely to succeed:

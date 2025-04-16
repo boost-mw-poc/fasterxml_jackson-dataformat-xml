@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import tools.jackson.dataformat.xml.XmlMapper;
 import tools.jackson.dataformat.xml.XmlTestUtil;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -17,7 +16,7 @@ public class TestNamespaces extends XmlTestUtil
 {
     final static String CHILD_NS = "uri:child";
     
-    @JacksonXmlRootElement(localName="person", namespace="http://example.org/person" )
+    @JsonRootName(value="person", namespace="http://example.org/person" )
     static class Person
     {
         private String name;
@@ -63,9 +62,9 @@ public class TestNamespaces extends XmlTestUtil
     }
 
     /*
-    /**********************************************************
-    /* Unit tests
-    /**********************************************************
+    /**********************************************************************
+    /* Test methods
+    /**********************************************************************
      */
 
     private final XmlMapper MAPPER = newMapper();

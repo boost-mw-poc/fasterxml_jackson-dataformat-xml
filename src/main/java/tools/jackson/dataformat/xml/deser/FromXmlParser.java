@@ -19,7 +19,6 @@ import tools.jackson.core.io.IOContext;
 import tools.jackson.core.io.NumberInput;
 import tools.jackson.core.util.ByteArrayBuilder;
 import tools.jackson.core.util.JacksonFeatureSet;
-import tools.jackson.dataformat.xml.XmlWriteFeature;
 import tools.jackson.dataformat.xml.util.CaseInsensitiveNameSet;
 import tools.jackson.dataformat.xml.util.StaxUtil;
 

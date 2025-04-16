@@ -29,6 +29,13 @@ public enum XmlWriteFeature implements FormatFeature
     WRITE_XML_1_1(false),
 
     /**
+     * Feature that controls whether XML declaration should include the standalone attribute
+     * when generator is initialized (true) or not (false). Only honored when
+     * {@link #WRITE_XML_DECLARATION WRITE_XML_DECLARATION} is enabled
+     */
+    WRITE_STANDALONE_YES_TO_XML_DECLARATION(false),
+
+    /**
      * Feature that controls whether serialization of Java {@code null} values adds
      * XML attribute of `xsi:nil`, as defined by XML Schema (see
      * <a href="https://www.oreilly.com/library/view/xml-in-a/0596007647/re166.html">this article</a>

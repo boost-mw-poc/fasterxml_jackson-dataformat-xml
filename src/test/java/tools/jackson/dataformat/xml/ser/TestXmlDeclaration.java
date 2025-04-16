@@ -35,4 +35,27 @@ public class TestXmlDeclaration extends XmlTestUtil
         String xml = mapper.writeValueAsString(new StringBean("abcd"));
         assertEquals(xml, "<?xml version='1.1' encoding='UTF-8'?><StringBean><text>abcd</text></StringBean>");
     }
+
+    @Test
+    public void testXml11DeclarationWithStandalone() throws Exception
+    {
+        XmlMapper mapper = XmlMapper.builder()
+                .configure(XmlWriteFeature.WRITE_XML_DECLARATION, true)
+                .configure(XmlWriteFeature.WRITE_XML_1_1, true)
+                .configure(XmlWriteFeature.WRITE_STANDALONE_YES_TO_XML_DECLARATION, true)
+                .build();
+        String xml = mapper.writeValueAsString(new StringBean("abcd"));
+        assertEquals("<?xml version='1.1' encoding='UTF-8' standalone='yes'?><StringBean><text>abcd</text></StringBean>", xml);
+    }
+
+    @Test
+    public void testXml10DeclarationWithStandalone() throws Exception
+    {
+        XmlMapper mapper = XmlMapper.builder()
+                .configure(XmlWriteFeature.WRITE_XML_DECLARATION, true)
+                .configure(XmlWriteFeature.WRITE_STANDALONE_YES_TO_XML_DECLARATION, true)
+                .build();
+        String xml = mapper.writeValueAsString(new StringBean("abcd"));
+        assertEquals("<?xml version='1.0' encoding='UTF-8' standalone='yes'?><StringBean><text>abcd</text></StringBean>", xml);
+    }
 }
