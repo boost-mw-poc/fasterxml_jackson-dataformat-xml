@@ -52,6 +52,7 @@ module tools.jackson.dataformat.xml
     opens tools.jackson.dataformat.xml.lists;
     opens tools.jackson.dataformat.xml.misc;
     opens tools.jackson.dataformat.xml.node;
+    opens tools.jackson.dataformat.xml.records;
     opens tools.jackson.dataformat.xml.stream;
     opens tools.jackson.dataformat.xml.tofix;
     opens tools.jackson.dataformat.xml.tofix.records;
