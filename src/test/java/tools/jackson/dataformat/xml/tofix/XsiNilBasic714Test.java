@@ -7,7 +7,6 @@ import tools.jackson.databind.*;
 import tools.jackson.dataformat.xml.XmlMapper;
 import tools.jackson.dataformat.xml.XmlReadFeature;
 import tools.jackson.dataformat.xml.XmlTestUtil;
-import tools.jackson.dataformat.xml.testutil.failure.JacksonTestFailureExpected;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,6 @@ public class XsiNilBasic714Test extends XmlTestUtil
             .build();
 
     // [dataformat-xml#714]: trailing END_OBJECT
-    @JacksonTestFailureExpected
     @Test
     public void testRootPojoAsNull() throws Exception
     {
@@ -34,7 +32,6 @@ public class XsiNilBasic714Test extends XmlTestUtil
     // [dataformat-xml#468]: Allow disabling xsi:nil special handling
 
     // [dataformat-xml#714]: trailing END_OBJECT
-    @JacksonTestFailureExpected
     @Test
     public void testDisableXsiNilRootProcessing() throws Exception
     {

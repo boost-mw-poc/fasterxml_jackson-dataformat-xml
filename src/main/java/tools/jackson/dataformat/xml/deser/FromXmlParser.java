@@ -135,7 +135,7 @@ public class FromXmlParser
      */
 
     /**
-     * Bitfield that indicates which numeric representations
+     * Bit field that indicates which numeric representations
      * have been calculated for the current type
      */
     protected int _numTypesValid = NR_UNKNOWN;
@@ -178,6 +178,8 @@ public class FromXmlParser
         //    changed in 2.10.2
         if (_xmlTokens.hasXsiNil()) {
             _nextToken = JsonToken.VALUE_NULL;
+            // 21-Apr-2025, tatu: [dataformat-xml#714] Must "flush" the stream
+            _xmlTokens.markAsStreamEnd();
         } else {
             switch (firstToken) {
             case XmlTokenStream.XML_START_ELEMENT:
@@ -474,16 +476,16 @@ public class FromXmlParser
     {
         JsonToken t = nextToken0();
         if (t != null) {
-            final String loc = (_parsingContext == null) ? "NULL" : String.valueOf(_parsingContext.pathAsPointer());
+            final String loc = (_parsingContext == null) ? "<null>" : "'"+String.valueOf(_parsingContext.pathAsPointer())+"'";
             switch (t) {
             case PROPERTY_NAME:
-                System.out.printf("FromXmlParser.nextToken() at '%s': JsonToken.PROPERTY_NAME '%s'\n", loc, _parsingContext.currentName());
+                System.out.printf("FromXmlParser.nextToken() at %s: JsonToken.PROPERTY_NAME '%s'\n", loc, _parsingContext.currentName());
                 break;
             case VALUE_STRING:
-                System.out.printf("FromXmlParser.nextToken() at '%s': JsonToken.VALUE_STRING '%s'\n", loc, getText());
+                System.out.printf("FromXmlParser.nextToken() at %s: JsonToken.VALUE_STRING '%s'\n", loc, getText());
                 break;
             default:
-                System.out.printf("FromXmlParser.nextToken() at '%s': %s\n", loc, t);
+                System.out.printf("FromXmlParser.nextToken() at %s: %s\n", loc, t);
             }
         }
         return t;
