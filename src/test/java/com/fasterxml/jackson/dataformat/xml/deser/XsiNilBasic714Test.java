@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.dataformat.xml.tofix;
+package com.fasterxml.jackson.dataformat.xml.deser;
 
 import org.junit.jupiter.api.Test;
 
