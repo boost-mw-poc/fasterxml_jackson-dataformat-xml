@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlTestUtil;
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
-import com.fasterxml.jackson.dataformat.xml.testutil.failure.JacksonTestFailureExpected;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,6 @@ public class XsiNilBasic714Test extends XmlTestUtil
             .build();
 
     // [dataformat-xml#714]: trailing END_OBJECT
-    @JacksonTestFailureExpected
     @Test
     public void testRootPojoAsNull() throws Exception
     {
@@ -35,7 +33,6 @@ public class XsiNilBasic714Test extends XmlTestUtil
     // [dataformat-xml#468]: Allow disabling xsi:nil special handling
 
     // [dataformat-xml#714]: trailing END_OBJECT
-    @JacksonTestFailureExpected
     @Test
     public void testDisableXsiNilRootProcessing() throws Exception
     {
@@ -46,10 +43,12 @@ public class XsiNilBasic714Test extends XmlTestUtil
         assertEquals("null", r.readValue(DOC).toString());
 
         // 07-Jul-2021, tatu: Alas! 2.x sets format feature flags too late to
-        //   affect root element (3.0 works correctly). So cannot test
-
-        ObjectReader noXsiNilReader = r.without(FromXmlParser.Feature.PROCESS_XSI_NIL);
+        //   affect root element (3.0 works correctly). Need a new mapper
+        XmlMapper mapper2 = mapperBuilder()
+                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+                .disable(FromXmlParser.Feature.PROCESS_XSI_NIL)
+                .build();
         assertEquals(a2q("{'nil':'true'}"),
-                noXsiNilReader.readValue(DOC).toString());
+                mapper2.readerFor(JsonNode.class).readValue(DOC).toString());
     }
 }
