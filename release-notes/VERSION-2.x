@@ -4,17 +4,20 @@ Project: jackson-dataformat-xml
 === Releases ===
 ------------------------------------------------------------------------
 
+2.20.0 (not yet released)
+
+-
+
+2.19.0-rc2 (24-Apr-2025)
+
 #508: `XmlMapper` is unable to deserialise into an empty record
  (reported by @protazy)
+#700: Unify testing structure/tools [JSTEP-10]
+ (fix contributed by Joo Hyuk K)
 #714: Root-level `null` handling (via `xsi:nil`) leaves trailing token in
  `JsonParser`-exposed token stream
 #745: Add feature to include `standalone='yes'` in xml declaration
  (contributed by @duoduobingbing)
-
-2.19.0-rc2 (07-Apr-2025)
-
-#700: Unify testing structure/tools [JSTEP-10]
- (fix contributed by Joo Hyuk K)
 - Upgrade Woodstox to 7.1.0
 
 2.18.3 (28-Feb-2025)
