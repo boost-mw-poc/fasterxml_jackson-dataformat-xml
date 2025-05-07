@@ -8,7 +8,7 @@ Project: jackson-dataformat-xml
 
 -
 
-2.19.0-rc2 (24-Apr-2025)
+2.19.0 (24-Apr-2025)
 
 #508: `XmlMapper` is unable to deserialise into an empty record
  (reported by @protazy)
