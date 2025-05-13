@@ -334,11 +334,6 @@ public class XmlFactory
     /**********************************************************************
      */
 
-    @Deprecated
-    public void setXMLTextElementName(String name) {
-        _cfgNameForTextElement = name;
-    }
-
     public String getXMLTextElementName() {
         return _cfgNameForTextElement;
     }

@@ -84,7 +84,7 @@ public class JacksonXmlAnnotationIntrospector
         }
         return null;
     }
-    
+
     @SuppressWarnings("deprecation")
     @Override
     public PropertyName findRootName(MapperConfig<?> config, AnnotatedClass ac)
@@ -93,7 +93,7 @@ public class JacksonXmlAnnotationIntrospector
         if (root != null) {
             String local = root.localName();
             String ns = root.namespace();
-            
+
             if (local.length() == 0 && ns.length() == 0) {
                 return PropertyName.USE_DEFAULT;
             }
