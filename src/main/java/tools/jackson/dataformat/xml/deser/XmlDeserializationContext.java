@@ -67,8 +67,8 @@ public class XmlDeserializationContext
             // Couple of ways to find "real" textual content. One is to look for
             // "XmlText"... but for that would need to know configuration. Alternatively
             // could hold on to last text seen -- but this might be last attribute, for
-            // empty element. So for now let's simply hard-code check for empty String
-            // as marker and hope for best
+            // empty element. So for now let's simply hard-code check for expected
+            // "text element" marker/placeholder and hope for best
             final String propName = p.currentName();
             JsonToken t = p.nextToken();
             if (t == JsonToken.VALUE_STRING) {
