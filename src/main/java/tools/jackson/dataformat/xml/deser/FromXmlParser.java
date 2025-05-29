@@ -372,7 +372,7 @@ public class FromXmlParser
      */
     
     /**
-     * Since xml representation can not really distinguish between array
+     * Since xml representation cannot really distinguish between array
      * and object starts (both are represented with elements), this method
      * is overridden and taken to mean that expectation is that the current
      * start element is to mean 'start array', instead of default of
@@ -403,7 +403,7 @@ public class FromXmlParser
     }
 
     /**
-     * Since xml representation can not really distinguish between different
+     * Since xml representation cannot really distinguish between different
      * scalar types (numbers, booleans) -- they are all just Character Data,
      * without schema -- we can try to infer type from intent here.
      * The main benefit is avoiding checks for coercion.
@@ -917,7 +917,7 @@ _currText);
     {
         if (_currToken != JsonToken.VALUE_STRING &&
                 (_currToken != JsonToken.VALUE_EMBEDDED_OBJECT || _binaryValue == null)) {
-            _reportError("Current token ("+_currToken+") not VALUE_STRING or VALUE_EMBEDDED_OBJECT, can not access as binary");
+            _reportError("Current token ("+_currToken+") not VALUE_STRING or VALUE_EMBEDDED_OBJECT, cannot access as binary");
         }
         // To ensure that we won't see inconsistent data, better clear up state...
         if (_binaryValue == null) {
@@ -1062,7 +1062,7 @@ _currText);
         if (_currToken == JsonToken.VALUE_NUMBER_INT) {
             return;
         }
-        throw _constructReadException("Current token (%s) not numeric, can not use numeric value accessors",
+        throw _constructReadException("Current token (%s) not numeric, cannot use numeric value accessors",
                 currentToken());
     }
 
