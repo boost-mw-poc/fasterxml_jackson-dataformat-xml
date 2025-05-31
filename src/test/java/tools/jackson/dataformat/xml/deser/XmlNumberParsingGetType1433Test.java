@@ -3,14 +3,12 @@ package tools.jackson.dataformat.xml.deser;
 import org.junit.jupiter.api.Test;
 
 import tools.jackson.core.*;
-import tools.jackson.core.exc.StreamReadException;
 
 import tools.jackson.dataformat.xml.*;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class XmlNumberParsingGetType1433Test
     extends XmlTestUtil
@@ -35,20 +33,14 @@ public class XmlNumberParsingGetType1433Test
         assertEquals(JsonParser.NumberType.INT, p.getNumberType());
         assertToken(JsonToken.END_OBJECT, p.nextToken());
         _verifyGetNumberTypeFail(p, "END_OBJECT");
-        assertNull(p.nextToken());
-        _verifyGetNumberTypeFail(p, "null");
         p.close();
         _verifyGetNumberTypeFail(p, "null");
     }
 
     private void _verifyGetNumberTypeFail(JsonParser p, String token) throws Exception
     {
-        try {
-            p.getNumberType();
-            fail("Should not pass");
-        } catch (StreamReadException e) {
-            verifyException(e, "Current token ("+token+") not numeric, cannot use numeric");
-        }
+        // In 2.x got exception; in 3.x null
+        assertNull(p.getNumberType());
     }
 
     private JsonParser _createParser(String text) throws Exception {

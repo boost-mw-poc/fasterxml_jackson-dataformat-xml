@@ -953,18 +953,18 @@ _currText);
 
     @Override
     public NumberType getNumberType() {
-        if (_numTypesValid == NR_UNKNOWN) {
-            _checkNumericValue(NR_UNKNOWN); // will also check event type
+        if (_numTypesValid != NR_UNKNOWN) {
+            // Only integer types supported (via `isExpectedNumberIntToken
+            if ((_numTypesValid & NR_INT) != 0) {
+                return NumberType.INT;
+            }
+            if ((_numTypesValid & NR_LONG) != 0) {
+                return NumberType.LONG;
+            }
+            return NumberType.BIG_INTEGER;
         }
-        // Only integer types supported so...
-        
-        if ((_numTypesValid & NR_INT) != 0) {
-            return NumberType.INT;
-        }
-        if ((_numTypesValid & NR_LONG) != 0) {
-            return NumberType.LONG;
-        }
-        return NumberType.BIG_INTEGER;
+        // 31-May-2025, tatu: [core#1434] Return null for unknown in 3.0
+        return null;
     }
 
     @Override
