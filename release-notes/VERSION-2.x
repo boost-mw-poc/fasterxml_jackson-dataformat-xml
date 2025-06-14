@@ -8,7 +8,7 @@ Project: jackson-dataformat-xml
 
 -
 
-2.19.1 (not yet released)
+2.19.1 (13-Jun-2025)
 
 - Add explicit version for Woodstox, stax2-api (no longer managed via jackson-bom)
 
