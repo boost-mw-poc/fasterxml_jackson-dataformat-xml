@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
@@ -161,13 +162,27 @@ public class FromXmlParser
             XmlNameProcessor nameProcessor,
             String nameForTextElement)
     {
+        this(readCtxt, ioCtxt,
+                parserFeatures, xmlFeatures,
+                xmlReader,
+                new XmlTokenStream(xmlReader, ioCtxt.contentReference(),
+                        xmlFeatures, nameProcessor),
+                nameProcessor,
+                nameForTextElement);
+    }
+
+    public FromXmlParser(ObjectReadContext readCtxt, IOContext ioCtxt,
+            int parserFeatures, int xmlFeatures,
+            XMLStreamReader xmlReader,
+            XmlTokenStream tokenStream,
+            XmlNameProcessor nameProcessor,
+            String nameForTextElement)
+    {
         super(readCtxt, ioCtxt, parserFeatures);
         _formatFeatures = xmlFeatures;
         _streamReadContext = XmlReadContext.createRootContext(-1, -1);
-        _xmlTokens = new XmlTokenStream(xmlReader, ioCtxt.contentReference(),
-                    _formatFeatures, nameProcessor);
+        _xmlTokens = Objects.requireNonNull(tokenStream, "xmlTokenStream cannot be null");
         _cfgNameForTextElement = nameForTextElement;
-
         final int firstToken;
         try {
             firstToken = _xmlTokens.initialize();

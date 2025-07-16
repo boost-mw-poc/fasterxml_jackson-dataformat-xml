@@ -6,9 +6,11 @@ Project: jackson-dataformat-xml
 
 2.20.0 (not yet released)
 
+#768: `FromXmlParser` lacks extension point for passing custom `XmlTokenStream`
+ (contributed by @xzxiaoshan)
 - Generate SBOMs [JSTEP-14]
 
-2.19.1 (not yet released)
+2.19.1 (13-Jun-2025)
 
 - Add explicit version for Woodstox, stax2-api (no longer managed via jackson-bom)
 

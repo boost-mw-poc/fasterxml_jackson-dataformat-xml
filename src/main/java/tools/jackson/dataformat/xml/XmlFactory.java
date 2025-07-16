@@ -388,25 +388,15 @@ public class XmlFactory
     {
         // Only care about features and pretty-printer, for now;
         // may add CharacterEscapes in future?
-        
-        return new ToXmlGenerator(writeCtxt, ioCtxt,
-                writeCtxt.getStreamWriteFeatures(_streamWriteFeatures),
-                writeCtxt.getFormatWriteFeatures(_formatWriteFeatures),
-                _createXmlWriter(out),
-                _xmlPrettyPrinter(writeCtxt),
-                _nameProcessor);
-    }
 
+        return _toXmlGenerator(writeCtxt, ioCtxt, _createXmlWriter(out));
+    }
+    
     @Override
     protected JsonGenerator _createUTF8Generator(ObjectWriteContext writeCtxt,
             IOContext ioCtxt, OutputStream out)
     {
-        return new ToXmlGenerator(writeCtxt, ioCtxt,
-                writeCtxt.getStreamWriteFeatures(_streamWriteFeatures),
-                writeCtxt.getFormatWriteFeatures(_formatWriteFeatures),
-                _createXmlWriter(out),
-                _xmlPrettyPrinter(writeCtxt),
-                _nameProcessor);
+        return _toXmlGenerator(writeCtxt, ioCtxt, _createXmlWriter(out));
     }
 
     private final XmlPrettyPrinter _xmlPrettyPrinter(ObjectWriteContext writeCtxt)
@@ -421,6 +411,19 @@ public class XmlFactory
                     +pp.getClass().getName()+"`");
         }
         return (XmlPrettyPrinter) pp;
+    }
+
+    /**
+     * Overridable method to allow using custom FromXmlParser sub-classes.
+     */
+    protected ToXmlGenerator _toXmlGenerator(ObjectWriteContext writeCtxt, IOContext ioCtxt,
+            XMLStreamWriter sw) {
+        return new ToXmlGenerator(writeCtxt, ioCtxt,
+                writeCtxt.getStreamWriteFeatures(_streamWriteFeatures),
+                writeCtxt.getFormatWriteFeatures(_formatWriteFeatures),
+                sw,
+                _xmlPrettyPrinter(writeCtxt),
+                _nameProcessor);
     }
 
     /*
@@ -442,11 +445,9 @@ public class XmlFactory
         }
 
         // false -> not managed
-        return new FromXmlParser(readCtxt,
+        return _fromXmlParser(readCtxt,
                 _createContext(_createContentReference(sr), false),
-                readCtxt.getStreamReadFeatures(_streamReadFeatures),
-                readCtxt.getFormatReadFeatures(_formatReadFeatures),
-                sr, _nameProcessor, _cfgNameForTextElement);
+                sr);
     }
 
     /**
@@ -459,11 +460,7 @@ public class XmlFactory
     {
         sw = _initializeXmlWriter(sw);
         IOContext ioCtxt = _createContext(_createContentReference(sw), false);
-        return new ToXmlGenerator(writeCtxt, ioCtxt,
-                writeCtxt.getStreamWriteFeatures(_streamWriteFeatures),
-                writeCtxt.getFormatWriteFeatures(_formatWriteFeatures),
-                sw,
-                _xmlPrettyPrinter(writeCtxt), _nameProcessor);
+        return _toXmlGenerator(writeCtxt, ioCtxt, sw);
     }
 
     /*
@@ -482,11 +479,7 @@ public class XmlFactory
         } catch (XMLStreamException e) {
             return StaxUtil.throwAsReadException(e, null);
         }
-        sr = _initializeXmlReader(sr);
-        return new FromXmlParser(readCtxt, ioCtxt,
-                readCtxt.getStreamReadFeatures(_streamReadFeatures),
-                readCtxt.getFormatReadFeatures(_formatReadFeatures),
-                sr, _nameProcessor, _cfgNameForTextElement);
+        return _fromXmlParser(readCtxt, ioCtxt, _initializeXmlReader(sr));
     }
 
     @Override
@@ -499,11 +492,7 @@ public class XmlFactory
         } catch (XMLStreamException e) {
             return StaxUtil.throwAsReadException(e, null);
         }
-        sr = _initializeXmlReader(sr);
-        return new FromXmlParser(readCtxt, ioCtxt,
-                readCtxt.getStreamReadFeatures(_streamReadFeatures),
-                readCtxt.getFormatReadFeatures(_formatReadFeatures),
-                sr, _nameProcessor, _cfgNameForTextElement);
+        return _fromXmlParser(readCtxt, ioCtxt, _initializeXmlReader(sr));
     }
 
     @Override
@@ -525,11 +514,7 @@ public class XmlFactory
         } catch (XMLStreamException e) {
             return StaxUtil.throwAsReadException(e, null);
         }
-        sr = _initializeXmlReader(sr);
-        return new FromXmlParser(readCtxt, ioCtxt,
-                readCtxt.getStreamReadFeatures(_streamReadFeatures),
-                readCtxt.getFormatReadFeatures(_formatReadFeatures),
-                sr, _nameProcessor, _cfgNameForTextElement);
+        return _fromXmlParser(readCtxt, ioCtxt, _initializeXmlReader(sr));
     }
 
     @Override
@@ -548,7 +533,14 @@ public class XmlFactory
         } catch (XMLStreamException e) {
             return StaxUtil.throwAsReadException(e, null);
         }
-        sr = _initializeXmlReader(sr);
+        return _fromXmlParser(readCtxt, ioCtxt, _initializeXmlReader(sr));
+    }
+
+    /**
+     * Overridable method to allow using custom FromXmlParser sub-classes.
+     */
+    protected FromXmlParser _fromXmlParser(ObjectReadContext readCtxt, IOContext ioCtxt,
+            XMLStreamReader sr) {
         return new FromXmlParser(readCtxt, ioCtxt,
                 readCtxt.getStreamReadFeatures(_streamReadFeatures),
                 readCtxt.getFormatReadFeatures(_formatReadFeatures),
