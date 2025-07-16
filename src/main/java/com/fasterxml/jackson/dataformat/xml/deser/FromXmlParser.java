@@ -5,6 +5,7 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.xml.XMLConstants;
@@ -274,17 +275,29 @@ public class FromXmlParser
      */
 
     public FromXmlParser(IOContext ctxt, int genericParserFeatures, int xmlFeatures,
-             ObjectCodec codec, XMLStreamReader xmlReader, XmlNameProcessor tagProcessor)
-        throws IOException
-    {
+             ObjectCodec codec, XMLStreamReader xmlReader, XmlNameProcessor tagProcessor) throws IOException {
+        this(ctxt, genericParserFeatures, codec, new XmlTokenStream(xmlReader, ctxt.contentReference(), xmlFeatures, tagProcessor));
+    }
+
+    /**
+     * Constructs a new {@link FromXmlParser} instance using the provided XML token stream.
+     * This constructor initializes the parser with the given I/O context, parser features,
+     * and object codec for deserializing XML content into Java objects.
+     *
+     * @since 2.20
+     * @param ctxt I/O context used for handling low-level I/O operations and buffering
+     * @param genericParserFeatures set of bitmasked parser features to control parsing behavior
+     * @param codec object codec used for converting between JSON-like structures and Java objects
+     * @param xmlTokenStream the pre-processed XML token stream to parse from
+     * @throws IOException if an I/O error occurs during initialization or parsing setup
+     */
+    public FromXmlParser(IOContext ctxt, int genericParserFeatures, ObjectCodec codec, XmlTokenStream xmlTokenStream) throws IOException {
         super(genericParserFeatures, ctxt.streamReadConstraints());
-        _formatFeatures = xmlFeatures;
         _ioContext = ctxt;
         _objectCodec = codec;
         _parsingContext = XmlReadContext.createRootContext(-1, -1);
-        _xmlTokens = new XmlTokenStream(xmlReader, ctxt.contentReference(),
-                    _formatFeatures, tagProcessor);
-
+        _xmlTokens = Objects.requireNonNull(xmlTokenStream, "xmlTokenStream cannot be null");
+        _formatFeatures = xmlTokenStream.getFormatFeatures();
         final int firstToken;
         try {
             firstToken = _xmlTokens.initialize();
