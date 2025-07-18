@@ -10,6 +10,10 @@ Project: jackson-dataformat-xml
  (contributed by @xzxiaoshan)
 - Generate SBOMs [JSTEP-14]
 
+2.19.2 (18-Jul-2025)
+
+No changes since 2.19.1
+
 2.19.1 (13-Jun-2025)
 
 - Add explicit version for Woodstox, stax2-api (no longer managed via jackson-bom)
