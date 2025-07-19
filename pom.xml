@@ -142,13 +142,6 @@ alternative support for serializing POJOs as XML and deserializing XML as POJOs.
       <releases><enabled>false</enabled></releases>
       <snapshots><enabled>true</enabled></snapshots>
     </repository>
-    <repository>
-      <id>sonatype-nexus-snapshots-old</id>
-      <name>Sonatype Nexus Snapshots (old)</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases><enabled>false</enabled></releases>
-      <snapshots><enabled>true</enabled></snapshots>
-    </repository>
   </repositories>
 
   <build>
