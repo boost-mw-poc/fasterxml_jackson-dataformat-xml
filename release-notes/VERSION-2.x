@@ -4,7 +4,7 @@ Project: jackson-dataformat-xml
 === Releases ===
 ------------------------------------------------------------------------
 
-2.20.0-rc1 (04-Aug-2025)
+2.20.0 (28-Aug-2025)
 
 #768: `FromXmlParser` lacks extension point for passing custom `XmlTokenStream`
  (contributed by @xzxiaoshan)
