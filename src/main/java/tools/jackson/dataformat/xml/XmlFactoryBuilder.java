@@ -28,7 +28,7 @@ public class XmlFactoryBuilder extends DecorableTSFBuilder<XmlFactory, XmlFactor
     protected int _formatParserFeatures;
 
     /**
-     * Set of {@@code ToXmlGenerator.Feature}s enabled, as bitmask.
+     * Set of {@code ToXmlGenerator.Feature}s enabled, as bitmask.
      */
     protected int _formatGeneratorFeatures;
 
@@ -58,7 +58,7 @@ public class XmlFactoryBuilder extends DecorableTSFBuilder<XmlFactory, XmlFactor
 
     /**
      * Optional {@link ClassLoader} to use for constructing
-     * {@link XMLInputFactory} and {@kink XMLOutputFactory} instances if
+     * {@link XMLInputFactory} and {@link XMLOutputFactory} instances if
      * not explicitly specified by caller. If not specified, will
      * default to {@link ClassLoader} that loaded this class.
      */
