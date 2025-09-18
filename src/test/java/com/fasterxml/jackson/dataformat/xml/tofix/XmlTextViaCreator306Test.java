@@ -16,7 +16,7 @@ import com.fasterxml.jackson.dataformat.xml.testutil.failure.JacksonTestFailureE
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-// [dataformat-xml#306]: Problem is that `@XmlText` has no nominal property name
+// [dataformat-xml#306]: Problem is that `@XmlText` has the nominal property name
 // of empty String (""), and that is not properly bound. Worse, empty String has
 // special meaning so that annotation CANNOT specify it, either.
 public class XmlTextViaCreator306Test extends XmlTestUtil
