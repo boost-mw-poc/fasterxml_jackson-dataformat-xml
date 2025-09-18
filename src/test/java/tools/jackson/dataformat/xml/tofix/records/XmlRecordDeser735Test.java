@@ -15,14 +15,34 @@ public class XmlRecordDeser735Test extends XmlTestUtil
     record Amount(@JacksonXmlText String value,
                   @JacksonXmlProperty(isAttribute = true, localName = "Ccy") String currency) {}
 
-    private final String XML =
-            a2q("<Amt Ccy='EUR'>1</Amt>");
+    static class Pojo735 {
+        String value;
+        String currency;
+
+        public Pojo735(@JacksonXmlText String value,
+                @JacksonXmlProperty(isAttribute = true, localName = "Ccy") String currency)
+        {
+            this.value = value;
+            this.currency = currency;
+        }
+    }
+    
+    private final String XML = "<Amt Ccy='EUR'>1</Amt>";
+
+    private final XmlMapper MAPPER = newMapper();
 
     @JacksonTestFailureExpected
     @Test
-    public void testDeser() throws Exception {
-        XmlMapper mapper = new XmlMapper();
-        Amount amt = mapper.readValue(XML, Amount.class);
+    public void testPojoDeser() throws Exception {
+        Pojo735 amt = MAPPER.readValue(XML, Pojo735.class);
+        assertEquals("1", amt.value);
+        assertEquals("EUR", amt.currency);
+    }
+
+    @JacksonTestFailureExpected
+    @Test
+    public void testRecordDeser() throws Exception {
+        Amount amt = MAPPER.readValue(XML, Amount.class);
         assertEquals("1", amt.value);
         assertEquals("EUR", amt.currency);
     }
