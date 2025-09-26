@@ -279,6 +279,11 @@ public class ToXmlGenerator
     }
 
     @Override
+    public boolean has(StreamWriteCapability capability) {
+        return DEFAULT_TEXTUAL_WRITE_CAPABILITIES.isEnabled(capability);
+    }
+    
+    @Override
     public JacksonFeatureSet<StreamWriteCapability> streamWriteCapabilities() {
         return DEFAULT_TEXTUAL_WRITE_CAPABILITIES;
     }
