@@ -5,25 +5,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 === Releases === 
 ------------------------------------------------------------------------
 
-3.0.0-rc10 (19-Sep-2025)
-3.0.0-rc9 (05-Sep-2025)
-3.0.0-rc8 (13-Aug-2025)
-3.0.0-rc7 (08-Aug-2025)
-3.0.0-rc6 (18-Jul-2025)
-3.0.0-rc5 (22-May-2025)
-3.0.0-rc4 (10-May-2025)
-
-No changes since rc3.
-
-3.0.0-rc3 (13-Apr-2025)
-
-- Branch rename "master" -> "3.x" [JSTEP-12]
-
-3.0.0-rc2 (28-Mar-2025)
-
-No changes since rc1.
-
-3.0.0-rc1 (07-Mar-2025)
+3.0.0 (03-Oct-2025)
 
 #25: `ACCEPT_EMPTY_STRING_AS_NULL_OBJECT` not honored in xml module for attributes
  (reported by Morten-Olav H)
@@ -40,3 +22,4 @@ No changes since rc1.
 #732: Change `XmlReadFeature.AUTO_DETECT_XSI_TYPE` default to `true`
 - Add `XmlMapper.shared()`
 - Minimum Java baseline: Java 17
+- Branch rename "master" -> "3.x" [JSTEP-12]
