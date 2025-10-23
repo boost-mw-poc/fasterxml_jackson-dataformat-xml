@@ -460,6 +460,21 @@ public class XmlMapper extends ObjectMapper
 
     /*
     /**********************************************************************
+    /* Format-specific
+    /**********************************************************************
+     */
+
+    public boolean isEnabled(XmlReadFeature f) {
+        return _deserializationConfig.hasFormatFeature(f);
+    }
+
+    public boolean isEnabled(XmlWriteFeature f) {
+        return _serializationConfig.hasFormatFeature(f);
+    }
+
+
+    /*
+    /**********************************************************************
     /* XML-specific access
     /**********************************************************************
      */
