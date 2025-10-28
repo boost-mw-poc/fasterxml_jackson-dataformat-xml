@@ -6,7 +6,8 @@ Project: jackson-dataformat-xml
 
 2.21.0 (not yet released)
 
-No changes since 2.20
+#114: `XmlMapper` does not support `StreamReadFeature.STRICT_DUPLICATE_DETECTION`
+ (reported by @cpopp)
 
 2.20.0 (28-Aug-2025)
 
