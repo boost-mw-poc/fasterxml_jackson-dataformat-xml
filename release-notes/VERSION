@@ -9,6 +9,10 @@ Version: 3.x (for earlier see VERSION-2.x)
 
 #780: Add `isEnabled()` methods for format-specific features to mappers
 
+3.0.2 (not yet released)
+
+#114: `XmlMapper` does not support `StreamReadFeature.STRICT_DUPLICATE_DETECTION`
+
 3.0.1 (21-Oct-2025)
 
 No changes since 3.0.0

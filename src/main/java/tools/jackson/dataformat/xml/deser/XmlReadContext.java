@@ -3,8 +3,10 @@ package tools.jackson.dataformat.xml.deser;
 import java.util.Set;
 
 import tools.jackson.core.*;
+import tools.jackson.core.exc.StreamReadException;
 import tools.jackson.core.io.CharTypes;
 import tools.jackson.core.io.ContentReference;
+import tools.jackson.core.json.DupDetector;
 
 /**
  * Extension of {@link TokenStreamContext}, which implements
@@ -22,6 +24,12 @@ public final class XmlReadContext
     // // // Configuration
 
     protected final XmlReadContext _parent;
+
+    /**
+     * Object used for checking for duplicate field names, if enabled
+     * (null if not enabled)
+     */
+    protected final DupDetector _dups;
 
     // // // Location information (minus source reference)
 
@@ -54,16 +62,25 @@ public final class XmlReadContext
     /**********************************************************************
      */
 
-    public XmlReadContext(int type, XmlReadContext parent, int nestingDepth,
+    public XmlReadContext(int type, XmlReadContext parent, DupDetector dups,
+            int nestingDepth,
             int lineNr, int colNr)
     {
         super();
         _type = type;
         _parent = parent;
+        _dups = dups;
         _nestingDepth = nestingDepth;
         _lineNr = lineNr;
         _columnNr = colNr;
         _index = -1;
+    }
+
+    @Deprecated // @since 3.0.2
+    public XmlReadContext(int type, XmlReadContext parent, int nestingDepth,
+            int lineNr, int colNr)
+    {
+        this(type, parent, null, nestingDepth, lineNr, colNr);
     }
 
     protected final void reset(int type, int lineNr, int colNr)
@@ -76,6 +93,9 @@ public final class XmlReadContext
         _currentValue = null;
         _namesToWrap = null;
         // _nestingDepth is fine since reused instance at same nesting level
+        if (_dups != null) {
+            _dups.reset();
+        }
     }
 
     @Override
@@ -94,8 +114,13 @@ public final class XmlReadContext
     /**********************************************************************
      */
 
+    public static XmlReadContext createRootContext(DupDetector dups, int lineNr, int colNr) {
+        return new XmlReadContext(TYPE_ROOT, null, dups, 0, lineNr, colNr);
+    }
+
+    @Deprecated // @since 3.0.2
     public static XmlReadContext createRootContext(int lineNr, int colNr) {
-        return new XmlReadContext(TYPE_ROOT, null, 0, lineNr, colNr);
+        return createRootContext(null, lineNr, colNr);
     }
 
     public final XmlReadContext createChildArrayContext(int lineNr, int colNr)
@@ -103,8 +128,9 @@ public final class XmlReadContext
         ++_index; // not needed for Object, but does not hurt so no need to check curr type
         XmlReadContext ctxt = _child;
         if (ctxt == null) {
-            _child = ctxt = new XmlReadContext(TYPE_ARRAY, this, _nestingDepth+1,
-                    lineNr, colNr);
+            _child = ctxt = new XmlReadContext(TYPE_ARRAY, this,
+                    (_dups == null) ? null : _dups.child(),
+                            _nestingDepth+1, lineNr, colNr);
             return ctxt;
         }
         ctxt.reset(TYPE_ARRAY, lineNr, colNr);
@@ -116,8 +142,9 @@ public final class XmlReadContext
         ++_index; // not needed for Object, but does not hurt so no need to check curr type
         XmlReadContext ctxt = _child;
         if (ctxt == null) {
-            _child = ctxt = new XmlReadContext(TYPE_OBJECT, this, _nestingDepth+1,
-                    lineNr, colNr);
+            _child = ctxt = new XmlReadContext(TYPE_OBJECT, this,
+                    (_dups == null) ? null : _dups.child(),
+                            _nestingDepth+1, lineNr, colNr);
             return ctxt;
         }
         ctxt.reset(TYPE_OBJECT, lineNr, colNr);
@@ -159,15 +186,25 @@ public final class XmlReadContext
     /**
      * Method called to mark start of new value, mostly to update `index`
      * for Array and Root contexts.
-     *
-     * @since 2.12
      */
     public final void valueStarted() {
         ++_index;
     }
 
-    public void setCurrentName(String name) {
+    public void setCurrentName(String name) throws StreamReadException {
         _currentName = name;
+        if (_dups != null) {
+            _checkDup(_dups, name);
+        }
+    }
+
+    private static void _checkDup(DupDetector dd, String name) throws StreamReadException
+    {
+        if (dd.isDup(name)) {
+            Object src = dd.getSource();
+            throw new StreamReadException(((src instanceof JsonParser) ? ((JsonParser) src) : null),
+                    "Duplicate Object property \""+name+"\"");
+        }
     }
 
     public void setNamesToWrap(Set<String> namesToWrap) {
@@ -181,7 +218,7 @@ public final class XmlReadContext
     protected void convertToArray() {
         _type = TYPE_ARRAY;
     }
-    
+
     /*
     /**********************************************************************
     /* Overridden standard methods

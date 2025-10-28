@@ -18,6 +18,7 @@ import tools.jackson.core.base.ParserMinimalBase;
 import tools.jackson.core.exc.StreamReadException;
 import tools.jackson.core.io.IOContext;
 import tools.jackson.core.io.NumberInput;
+import tools.jackson.core.json.DupDetector;
 import tools.jackson.core.util.ByteArrayBuilder;
 import tools.jackson.core.util.JacksonFeatureSet;
 import tools.jackson.dataformat.xml.util.CaseInsensitiveNameSet;
@@ -180,7 +181,9 @@ public class FromXmlParser
     {
         super(readCtxt, ioCtxt, parserFeatures);
         _formatFeatures = xmlFeatures;
-        _streamReadContext = XmlReadContext.createRootContext(-1, -1);
+        DupDetector dups = StreamReadFeature.STRICT_DUPLICATE_DETECTION.enabledIn(parserFeatures)
+            ? DupDetector.rootDetector(this) : null;
+        _streamReadContext = XmlReadContext.createRootContext(dups, -1, -1);
         _xmlTokens = Objects.requireNonNull(tokenStream, "xmlTokenStream cannot be null");
         _cfgNameForTextElement = nameForTextElement;
         final int firstToken;
