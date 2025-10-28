@@ -5,6 +5,7 @@ import java.util.Set;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.core.io.CharTypes;
 import com.fasterxml.jackson.core.io.ContentReference;
+import com.fasterxml.jackson.core.json.DupDetector;
 
 /**
  * Extension of {@link JsonStreamContext}, which implements
@@ -22,6 +23,14 @@ public final class XmlReadContext
     // // // Configuration
 
     protected final XmlReadContext _parent;
+
+    /**
+     * Object used for checking for duplicate field names, if enabled
+     * (null if not enabled)
+     *
+     * @since 2.21
+     */
+    protected final DupDetector _dups;
 
     // // // Location information (minus source reference)
 
@@ -59,28 +68,26 @@ public final class XmlReadContext
      */
 
     /**
-     * @since 2.18
+     * @since 2.21
      */
-    public XmlReadContext(XmlReadContext parent, int nestingDepth,
+    public XmlReadContext(XmlReadContext parent, DupDetector dups,
+            int nestingDepth,
             int type, int lineNr, int colNr)
     {
         super();
         _type = type;
         _parent = parent;
+        _dups = dups;
         _lineNr = lineNr;
         _columnNr = colNr;
         _index = -1;
         _nestingDepth = nestingDepth;
     }
 
-    /**
-     * @deprecated Since 2.18
-     */
-    @Deprecated // since 2.18
-    public XmlReadContext(XmlReadContext parent, int type, int lineNr, int colNr)
-    {
-        this(parent, (parent == null) ? 0 : parent._nestingDepth + 1,
-                type, lineNr, colNr);
+    @Deprecated // @since 2.21
+    public XmlReadContext(XmlReadContext parent, int nestingDepth,
+            int type, int lineNr, int colNr) {
+        this(parent, null, nestingDepth, type, lineNr, colNr);
     }
 
     protected final void reset(int type, int lineNr, int colNr)
@@ -92,7 +99,10 @@ public final class XmlReadContext
         _currentName = null;
         _currentValue = null;
         _namesToWrap = null;
-        // _nestingDepth fine as is, same level for reuse
+        if (_dups != null) {
+            _dups.reset();
+        }
+        // _nestingDepth fine as-is, same level for reuse
     }
 
     @Override
@@ -111,20 +121,28 @@ public final class XmlReadContext
     /**********************************************************************
      */
 
-    public static XmlReadContext createRootContext(int lineNr, int colNr) {
-        return new XmlReadContext(null, 0, TYPE_ROOT, lineNr, colNr);
+    public static XmlReadContext createRootContext(DupDetector dups, int lineNr, int colNr) {
+        return new XmlReadContext(null, dups, 0, TYPE_ROOT, lineNr, colNr);
     }
 
-    public static XmlReadContext createRootContext() {
-        return new XmlReadContext(null, 0, TYPE_ROOT, 1, 0);
+    @Deprecated // @since 2.21
+    public static XmlReadContext createRootContext(int lineNr, int colNr) {
+        return createRootContext(null, lineNr, colNr);
     }
-    
+
+    @Deprecated // @since 2.21
+    public static XmlReadContext createRootContext() {
+        return createRootContext(null, 1, 0);
+    }
+
     public final XmlReadContext createChildArrayContext(int lineNr, int colNr)
     {
         ++_index; // not needed for Object, but does not hurt so no need to check curr type
         XmlReadContext ctxt = _child;
         if (ctxt == null) {
-            _child = ctxt = new XmlReadContext(this, _nestingDepth+1, TYPE_ARRAY, lineNr, colNr);
+            _child = ctxt = new XmlReadContext(this,
+                    (_dups == null) ? null : _dups.child(),
+                            _nestingDepth+1, TYPE_ARRAY, lineNr, colNr);
             return ctxt;
         }
         ctxt.reset(TYPE_ARRAY, lineNr, colNr);
@@ -136,10 +154,12 @@ public final class XmlReadContext
         ++_index; // not needed for Object, but does not hurt so no need to check curr type
         XmlReadContext ctxt = _child;
         if (ctxt == null) {
-            _child = ctxt = new XmlReadContext(this, TYPE_OBJECT, lineNr, colNr);
-            return ctxt;
+            _child = ctxt = new XmlReadContext(this,
+                    (_dups == null) ? null : _dups.child(),
+                            _nestingDepth+1, TYPE_OBJECT, lineNr, colNr);
+        } else {
+            ctxt.reset(TYPE_OBJECT, lineNr, colNr);
         }
-        ctxt.reset(TYPE_OBJECT, lineNr, colNr);
         return ctxt;
     }
 
@@ -186,10 +206,22 @@ public final class XmlReadContext
         ++_index;
     }
 
-    public void setCurrentName(String name) {
+    public void setCurrentName(String name) throws JsonProcessingException {
         _currentName = name;
+        if (_dups != null) {
+            _checkDup(_dups, name);
+        }
     }
 
+    // @since 2.21
+    private static void _checkDup(DupDetector dd, String name) throws JsonProcessingException
+    {
+        if (dd.isDup(name)) {
+            throw new JsonParseException(null,
+                    "Duplicate field '"+name+"'", dd.findLocation());
+        }
+    }
+    
     public void setNamesToWrap(Set<String> namesToWrap) {
         _namesToWrap = namesToWrap;
     }
