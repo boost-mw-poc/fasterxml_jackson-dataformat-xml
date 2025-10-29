@@ -10,6 +10,7 @@ Project: jackson-dataformat-xml
  (contributed by @xzxiaoshan)
 - Generate SBOMs [JSTEP-14]
 
+2.19.3 (29-Oct-2025)
 2.19.2 (18-Jul-2025)
 
 No changes since 2.19.1
@@ -30,6 +31,7 @@ No changes since 2.19.1
  (contributed by @duoduobingbing)
 - Upgrade Woodstox to 7.1.0
 
+2.18.5 (27-Oct-2025)
 2.18.4 (06-May-2025)
 2.18.3 (28-Feb-2025)
 
