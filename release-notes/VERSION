@@ -5,7 +5,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 === Releases === 
 ------------------------------------------------------------------------
 
-3.0.2 (not yet released)
+3.0.2 (07-Nov-2025)
 
 #114: `XmlMapper` does not support `StreamReadFeature.STRICT_DUPLICATE_DETECTION`
 
