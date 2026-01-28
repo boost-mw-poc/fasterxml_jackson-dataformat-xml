@@ -5,7 +5,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 === Releases === 
 ------------------------------------------------------------------------
 
-3.1.0 (not yet released)
+3.1.0-rc1 (27-Jan-2026)
 
 #780: Add `isEnabled()` methods for format-specific features to mappers
 
