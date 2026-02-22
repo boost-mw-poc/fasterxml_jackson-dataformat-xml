@@ -30,6 +30,7 @@ No changes since 2.19.1
  (contributed by @duoduobingbing)
 - Upgrade Woodstox to 7.1.0
 
+2.18.6 (22-Feb-2026)
 2.18.5 (27-Oct-2025)
 2.18.4 (06-May-2025)
 2.18.3 (28-Feb-2025)
