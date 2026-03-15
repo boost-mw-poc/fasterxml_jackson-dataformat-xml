@@ -45,7 +45,7 @@ public class PolymorphicExternalTest extends XmlTestUtil
         cage.animal = new Cat();
 
         String xml = MAPPER.writeValueAsString(cage);
-        System.out.println("Serialized XML: " + xml);
+        //System.out.println("Serialized XML: " + xml);
 
         // Count occurrences of "<type>" - should be exactly 1
         int count = countOccurrences(xml, "<type>");
