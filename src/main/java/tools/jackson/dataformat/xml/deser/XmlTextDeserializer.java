@@ -6,6 +6,7 @@ import tools.jackson.databind.deser.*;
 import tools.jackson.databind.deser.bean.BeanDeserializerBase;
 import tools.jackson.databind.deser.std.DelegatingDeserializer;
 import tools.jackson.databind.jsontype.TypeDeserializer;
+import tools.jackson.databind.util.TokenBuffer;
 
 /**
  * Delegating deserializer that is used in the special cases where
@@ -89,9 +90,14 @@ public class XmlTextDeserializer
         throws JacksonException
     {
         if (p.currentToken() == JsonToken.VALUE_STRING) {
-            Object bean = _valueInstantiator.createUsingDefault(ctxt);
-            _xmlTextProperty.deserializeAndSet(p, ctxt, bean);
-            return bean;
+            if (_valueInstantiator.canCreateUsingDefault()) {
+                Object bean = _valueInstantiator.createUsingDefault(ctxt);
+                _xmlTextProperty.deserializeAndSet(p, ctxt, bean);
+                return bean;
+            }
+            // [dataformat-xml#615]: No default constructor (e.g. records);
+            // synthesize object tokens so the delegate can use property-based creators
+            return _deserializeFromStringViaDelegate(p, ctxt);
         }
         return _delegatee.deserialize(p,  ctxt);
     }
@@ -129,5 +135,27 @@ public class XmlTextDeserializer
                     +deser.getClass().getName());
         }
         return (BeanDeserializerBase) deser;
+    }
+
+    /**
+     * [dataformat-xml#615]: When the parser sees a bare VALUE_STRING but the type
+     * has no default constructor (e.g. Java records), wrap the text value as
+     * {@code { "": "text" }} so the delegate can use its property-based creator.
+     *
+     * @since 3.2
+     */
+    private Object _deserializeFromStringViaDelegate(JsonParser p,
+            DeserializationContext ctxt)
+        throws JacksonException
+    {
+        try (TokenBuffer tb = ctxt.bufferForInputBuffering(p)) {
+            tb.writeStartObject();
+            tb.writeName(_xmlTextProperty.getName());
+            tb.writeString(p.getString());
+            tb.writeEndObject();
+            try (JsonParser syntheticParser = tb.asParserOnFirstToken(ctxt, p)) {
+                return _delegatee.deserialize(syntheticParser, ctxt);
+            }
+        }
     }
 }
