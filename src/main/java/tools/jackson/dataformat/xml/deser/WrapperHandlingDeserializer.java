@@ -147,13 +147,23 @@ public class WrapperHandlingDeserializer
     @SuppressWarnings("resource")
     protected final void _configureParser(JsonParser p) throws JacksonException
     {
+        if (_namesToWrap == null) {
+            return;
+        }
         // 05-Sep-2019, tatu: May get XML parser, except for case where content is
         //   buffered. In that case we may still have access to real parser if we
         //   are lucky (like in [dataformat-xml#242])
-        while (p instanceof JsonParserDelegate) {
-            p = ((JsonParserDelegate) p).delegate();
+        // 15-Mar-2026, tatu: [dataformat-xml#455] Check for ElementWrappable at
+        //   each delegation level, not just at the innermost parser. This handles
+        //   the case where XmlTokenBuffer wraps the TokenBuffer.Parser with an
+        //   ElementWrappable delegate during polymorphic type resolution.
+        while (p instanceof JsonParserDelegate jpd) {
+            if (p instanceof ElementWrappable) {
+                break;
+            }
+            p = jpd.delegate();
         }
-        if ((p instanceof ElementWrappable) && (_namesToWrap != null)) {
+        if (p instanceof ElementWrappable ew) {
             // 03-May-2021, tatu: as per [dataformat-xml#469] there are special
             //   cases where we get String token to represent XML empty element.
             //   If so, need to refrain from adding wrapping as that would
@@ -165,17 +175,17 @@ public class WrapperHandlingDeserializer
                     //    is consumed during buffering, so need to consider that too
                     //    it seems (just hope we are at correct level and not off by one...)
                     || t == JsonToken.PROPERTY_NAME) {
-                ((ElementWrappable) p).addVirtualWrapping(_namesToWrap, _caseInsensitive);
+                ew.addVirtualWrapping(_namesToWrap, _caseInsensitive);
             }
         }
     }
 
     protected BeanDeserializerBase _verifyDeserType(ValueDeserializer<?> deser)
     {
-        if (!(deser instanceof BeanDeserializerBase)) {
+        if (!(deser instanceof BeanDeserializerBase bdb)) {
             throw new IllegalArgumentException("Can not change delegate to be of type "
                     +deser.getClass().getName());
         }
-        return (BeanDeserializerBase) deser;
+        return bdb;
     }
 }
