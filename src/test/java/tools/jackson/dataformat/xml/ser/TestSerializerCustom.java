@@ -23,37 +23,37 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TestSerializerCustom extends XmlTestUtil
 {
     @JsonPropertyOrder({ "name", "obj" })
-    static class Item {
+    public static class Item {
         public String name;
         public Foo obj;
         public Item(String name, Foo obj) {
-          this.name = name;
-          this.obj = obj;
+            this.name = name;
+            this.obj = obj;
         }
     }
 
-    static class Foo {
+    public static class Foo {
         public String name;
         protected Foo() { }
         public Foo(String name) {
-          this.name = name;
+            this.name = name;
         }
     }
 
     static class ItemDeserializer extends StdDeserializer<Item> {
         public ItemDeserializer() {
-          super(Item.class);
+            super(Item.class);
         }
 
         @Override
         public Item deserialize(JsonParser p, DeserializationContext ctxt) {
-          JsonNode json = ctxt.readTree(p);
-          JsonNode foo = json.get("obj");
-          if (foo == null) {
-              throw new IllegalStateException("missing foo property");
-          }
-          return new Item(json.path("name").asString(),
-                  new Foo(foo.path("name").asString()));
+            JsonNode json = ctxt.readTree(p);
+            JsonNode foo = json.get("obj");
+            if (foo == null) {
+                throw new IllegalStateException("missing foo property");
+            }
+            return new Item(json.path("name").asString(),
+                    new Foo(foo.path("name").asString()));
         }
     }
 
@@ -64,10 +64,10 @@ public class TestSerializerCustom extends XmlTestUtil
 
         @Override
         public void serialize(Item value, JsonGenerator g, SerializationContext ctxt) {
-          g.writeStartObject();
-          g.writePOJOProperty("obj", value.obj);
-          g.writeStringProperty("name", value.name);
-          g.writeEndObject();
+            g.writeStartObject();
+            g.writePOJOProperty("obj", value.obj);
+            g.writeStringProperty("name", value.name);
+            g.writeEndObject();
         }
     }
 

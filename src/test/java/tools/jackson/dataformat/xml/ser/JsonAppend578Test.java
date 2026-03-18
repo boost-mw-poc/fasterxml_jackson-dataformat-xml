@@ -33,8 +33,6 @@ public class JsonAppend578Test extends XmlTestUtil
     }
 
     static class MyVirtualPropertyWriter extends VirtualBeanPropertyWriter {
-        private static final long serialVersionUID = 1L;
-
         public MyVirtualPropertyWriter() {}
 
         protected MyVirtualPropertyWriter(BeanPropertyDefinition propDef, Annotations contextAnnotations,
