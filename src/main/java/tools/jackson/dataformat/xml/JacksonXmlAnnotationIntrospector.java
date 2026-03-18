@@ -144,6 +144,28 @@ public class JacksonXmlAnnotationIntrospector
         return ns1;
     }
 
+    // [dataformat-xml#27]
+    @Override
+    public PropertyName findXmlPropertyInnerName(MapperConfig<?> config, Annotated ann)
+    {
+        JacksonXmlProperty pann = _findAnnotation(ann, JacksonXmlProperty.class);
+        if (pann != null) {
+            String localName = pann.localName();
+            if (localName != null && !localName.isEmpty()) {
+                return PropertyName.construct(localName, pann.namespace());
+            }
+        }
+        // Also check @JsonProperty as it is commonly used for inner element names
+        JsonProperty jprop = _findAnnotation(ann, JsonProperty.class);
+        if (jprop != null) {
+            String localName = jprop.value();
+            if (localName != null && !localName.isEmpty()) {
+                return PropertyName.construct(localName, jprop.namespace());
+            }
+        }
+        return null;
+    }
+
     /* 30-Mar-2023, tatu: Although issue [dataformat-xml#578] requires override
      *   in 2.x for this method, same problem does NOT affect 3.0.
      *   This because we replace default AnnotationIntrospector, instead of
@@ -241,16 +263,20 @@ public class JacksonXmlAnnotationIntrospector
 
     protected PropertyName _findXmlName(Annotated a)
     {
-        JacksonXmlProperty pann = _findAnnotation(a, JacksonXmlProperty.class);
-        if (pann != null) {
-            // [dataformat-xml#665]: empty localName should not produce an
-            //   empty-string PropertyName (causes "Duplicate creator property"
-            //   on records); return null so that the implicit name is used.
-            String localName = pann.localName();
-            if (localName != null && !localName.isEmpty()) {
-                return PropertyName.construct(localName, pann.namespace());
+        PropertyName innerName = findXmlPropertyInnerName(null, a);
+        if (innerName == null) {
+            return null;
+        }
+        // [dataformat-xml#27]: If @JacksonXmlElementWrapper has explicit
+        //   name, use wrapper name as property identity to avoid conflicts
+        //   when multiple properties share the same inner element name.
+        JacksonXmlElementWrapper w = _findAnnotation(a, JacksonXmlElementWrapper.class);
+        if (w != null && w.useWrapping()) {
+            String wrapperName = w.localName();
+            if (wrapperName != null && !wrapperName.isEmpty()) {
+                return PropertyName.construct(wrapperName, w.namespace());
             }
         }
-        return null;
+        return innerName;
     }
 }

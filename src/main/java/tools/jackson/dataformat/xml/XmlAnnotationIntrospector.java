@@ -1,6 +1,7 @@
 package tools.jackson.dataformat.xml;
 
 import tools.jackson.databind.AnnotationIntrospector;
+import tools.jackson.databind.PropertyName;
 import tools.jackson.databind.cfg.MapperConfig;
 import tools.jackson.databind.introspect.Annotated;
 import tools.jackson.databind.introspect.AnnotationIntrospectorPair;
@@ -86,6 +87,18 @@ public interface XmlAnnotationIntrospector
             Boolean value = (_xmlPrimary == null) ? null : _xmlPrimary.isOutputAsCData(config, ann);
             if ((value == null) && (_xmlSecondary != null)) {
                 value = _xmlSecondary.isOutputAsCData(config, ann);
+            }
+            return value;
+        }
+
+        // [dataformat-xml#27]
+        @Override
+        public PropertyName findXmlPropertyInnerName(MapperConfig<?> config, Annotated ann)
+        {
+            PropertyName value = (_xmlPrimary == null) ? null
+                    : _xmlPrimary.findXmlPropertyInnerName(config, ann);
+            if ((value == null) && (_xmlSecondary != null)) {
+                value = _xmlSecondary.findXmlPropertyInnerName(config, ann);
             }
             return value;
         }

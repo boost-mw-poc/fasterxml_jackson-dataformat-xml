@@ -66,7 +66,13 @@ public class XmlBeanSerializerModifier
             } else {
                 continue;
             }
-            PropertyName wrappedName = PropertyName.construct(bpw.getName(), ns);
+            // [dataformat-xml#27]: Get inner element name via introspector
+            // since property name may have been set to wrapper name
+            // to avoid conflicts during bean introspection
+            PropertyName wrappedName = AnnotationUtil.findXmlPropertyInnerName(config, intr, member);
+            if (wrappedName == null) {
+                wrappedName = PropertyName.construct(bpw.getName(), ns);
+            }
             PropertyName wrapperName = bpw.getWrapperName();
 
             // first things first: no wrapping?
