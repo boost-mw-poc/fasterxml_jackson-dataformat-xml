@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 //   binding can not be relied on)
 // 2. Override default implicit name to be `null`, which should allow
 //   combination of accessors
-public class JaxbXmlValue418Test extends XmlTestUtil
+public class JakartaBindXmlValue418Test extends XmlTestUtil
 {
     // [dataformat-xml#418]
     @XmlRootElement(name = "ROOT")
