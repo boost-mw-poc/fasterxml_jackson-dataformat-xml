@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RawValueSerializationTest extends XmlTestUtil
 {
     @JsonPropertyOrder({ "id", "raw" })
-    static class RawWrapper {
+    public static class RawWrapper {
         public int id = 42;
 
         @JsonRawValue
@@ -30,7 +30,7 @@ public class RawValueSerializationTest extends XmlTestUtil
     private final XmlMapper MAPPER = newMapper();
 
     @Test
-    public void testRawValueSerialization() throws Exception
+    void testRawValueSerialization() throws Exception
     {
         assertEquals("<RawWrapper>"
                 +"<id>42</id>"
