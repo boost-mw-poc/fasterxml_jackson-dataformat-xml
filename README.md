@@ -24,9 +24,9 @@ Specifically:
 | Type | Status |
 | ---- | ------ |
 | Build (CI) | [![Build (github)](https://github.com/FasterXML/jackson-dataformat-xml/actions/workflows/main.yml/badge.svg)](https://github.com/FasterXML/jackson-dataformat-xml/actions/workflows/main.yml) |
-| Artifact | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.jackson.dataformat/jackson-dataformat-xml/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
+| Artifact | [![Maven Central](https://img.shields.io/maven-central/v/tools.jackson.dataformat/jackson-dataformat-xml.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/tools.jackson.dataformat/jackson-dataformat-xml) |
 | OSS Sponsorship | [![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.jackson.dataformat:jackson-dataformat-xml)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-jackson-dataformat-jackson-dataformat-xml?utm_source=maven-com-fasterxml-jackson-dataformat-jackson-dataformat-xml&utm_medium=referral&utm_campaign=readme) |
-| Javadocs | [![Javadoc](https://javadoc.io/badge/com.fasterxml.jackson.dataformat/jackson-dataformat-xml.svg)](http://www.javadoc.io/doc/com.fasterxml.jackson.dataformat/jackson-dataformat-xml) |
+| Javadocs | [![Javadoc](https://javadoc.io/badge/tools.jackson.dataformat/jackson-dataformat-xml.svg)](http://www.javadoc.io/doc/tools.jackson.dataformat/jackson-dataformat-xml) |
 | Code coverage (2.19) | [![codecov.io](https://codecov.io/github/FasterXML/jackson-dataformat-xml/coverage.svg?branch=2.19)](https://codecov.io/github/FasterXML/jackson-dataformat-xml?branch=2.19) |
 | OpenSSF Score | [![OpenSSF  Scorecard](https://api.securityscorecards.dev/projects/github.com/FasterXML/jackson-dataformat-xml/badge)](https://securityscorecards.dev/viewer/?uri=github.com/FasterXML/jackson-dataformat-xml) |
 | Fuzzing | [![Fuzzing Status](https://oss-fuzz-build-logs.storage.googleapis.com/badges/jackson-dataformat-xml.svg)](https://bugs.chromium.org/p/oss-fuzz/issues/list?sort=-opened&can=1&q=proj:jackson-dataformat-xml) |
