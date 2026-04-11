@@ -117,6 +117,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 #845: Implement `JsonGenerator` methods `writeComment()` and `canWriteComments()`
  (implemented by @cowtowncoder, w/ Claude code)
 
+3.1.2 (11-Apr-2026)
 3.1.1 (27-Mar-2026)
 
 No changes since 3.1.0
