@@ -1,5 +1,9 @@
 package tools.jackson.dataformat.xml.ser;
 
+import javax.xml.stream.XMLStreamException;
+
+import org.codehaus.stax2.XMLStreamWriter2;
+
 /**
  * Value container to represent XML Document Type Declaration,
  * to be written using {@link XmlGeneratorInitializer}.
@@ -8,7 +12,9 @@ package tools.jackson.dataformat.xml.ser;
  */
 public record DTD(String rootName,
         String systemId, String publicId,
-        String internalSubset) {
+        String internalSubset)
+    implements XmlPrologDirective
+{
     public DTD {
         rootName = _nonEmptyNonNull("rootName", rootName);
         systemId = _emptyToNull(systemId);
@@ -26,5 +32,12 @@ public record DTD(String rootName,
                     .formatted(prop));
         }
         return str;
+    }
+
+    @Override
+    public void write(ToXmlGenerator xmlGen, XMLStreamWriter2 xmlWriter)
+        throws XMLStreamException
+    {
+        xmlWriter.writeDTD(rootName(), systemId(), publicId(), internalSubset());
     }
 }

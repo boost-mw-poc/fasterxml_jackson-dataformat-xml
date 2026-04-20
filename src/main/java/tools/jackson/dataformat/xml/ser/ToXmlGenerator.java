@@ -261,8 +261,7 @@ public class ToXmlGenerator
 
             // 19-Apr-2026, tatu: [dataformat-xml#150] Allow outputting DTD
             if (_dtd != null) {
-                _xmlWriter.writeDTD(_dtd.rootName(), _dtd.systemId(), _dtd.publicId(),
-                        _dtd.internalSubset());
+                _dtd.write(this, _xmlWriter);
             }
 
         } catch (XMLStreamException e) {
