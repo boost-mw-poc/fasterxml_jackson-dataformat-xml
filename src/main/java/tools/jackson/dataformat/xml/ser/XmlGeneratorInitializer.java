@@ -31,12 +31,34 @@ public class XmlGeneratorInitializer
         }
     }
 
+    /**
+     * Convenience method that constructs {@link DTD} out of arguments
+     * and calls {@link #addDTD(DTD)}.
+     *
+     * @param rootName (required) Root name for DTD
+     * @param systemId (optional) System Id for DTD
+     * @param publicId (optional) Public Id for DTD
+     * @param internalSubset (optional) Internal subset for DTD (not including
+     *   surrounding brackets
+     *
+     * @return This initializer for call chaining
+     */
     public XmlGeneratorInitializer addDTD(String rootName,
             String systemId, String publicId,
             String internalSubset) {
         return addDTD(new DTD(rootName, systemId, publicId, internalSubset));
     }
 
+    /**
+     * Method for adding Document Type Declaration (DTD) directive; to write
+     * in order added with respective to other directives (but always after
+     * XML Declaration which most come before any other output; and before
+     * Document Root element)
+     *
+     * @param dtd DTD to write
+     *
+     * @return This initializer for call chaining
+     */
     public XmlGeneratorInitializer addDTD(DTD dtd) {
         _dtd = dtd;
         return this;
