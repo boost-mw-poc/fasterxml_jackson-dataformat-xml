@@ -20,7 +20,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
     {
         ObjectWriter w = MAPPER.writer().with(
                 new XmlGeneratorInitializer()
-                        .setDTD("StringBean", null, null, null));
+                        .addDTD("StringBean", null, null, null));
         assertEquals(a2q("<!DOCTYPE StringBean>"
                 +"<StringBean><text>test</text></StringBean>"),
                 w.writeValueAsString(new StringBean("test")));
@@ -31,7 +31,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
     {
         ObjectWriter w = MAPPER.writer().with(
                 new XmlGeneratorInitializer()
-                        .setDTD("StringBean", "system", "http://foo.bar", ""));
+                        .addDTD("StringBean", "system", "http://foo.bar", ""));
         assertEquals(a2q("<!DOCTYPE StringBean PUBLIC 'http://foo.bar' 'system'>"
                 +"<StringBean><text>test</text></StringBean>"),
                 w.writeValueAsString(new StringBean("test")));
@@ -42,7 +42,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
     {
         ObjectWriter w = MAPPER.writer().with(
                 new XmlGeneratorInitializer()
-                        .setDTD("StringBean", "system", "", null));
+                        .addDTD("StringBean", "system", "", null));
         assertEquals(a2q("<!DOCTYPE StringBean SYSTEM 'system'>"
                 +"<StringBean><text>test</text></StringBean>"),
                 w.writeValueAsString(new StringBean("test")));
@@ -53,7 +53,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
     {
         ObjectWriter w = MAPPER.writer().with(
                 new XmlGeneratorInitializer()
-                        .setDTD("StringBean", "system", "http://foo.bar", "<!ELEMENT root (#PCDATA)>"));
+                        .addDTD("StringBean", "system", "http://foo.bar", "<!ELEMENT root (#PCDATA)>"));
         assertEquals(a2q("<!DOCTYPE StringBean PUBLIC 'http://foo.bar' 'system' "
                 +"[<!ELEMENT root (#PCDATA)>]>"
                 +"<StringBean><text>test</text></StringBean>"),
@@ -69,7 +69,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
                 .build();
         ObjectWriter w = mapper.writer().with(
                 new XmlGeneratorInitializer()
-                        .setDTD("StringBean", "system", "http://foo.bar", null));
+                        .addDTD("StringBean", "system", "http://foo.bar", null));
         // XML declaration is emitted with single quotes, DOCTYPE with double quotes,
         // so cannot use a2q() on the whole string here.
         assertEquals("<?xml version='1.0' encoding='UTF-8'?>"
@@ -85,7 +85,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
         try {
             /*ObjectWriter w =*/ MAPPER.writer().with(
                 new XmlGeneratorInitializer()
-                    .setDTD("", null, null, null));
+                    .addDTD("", null, null, null));
             fail("Should not pass");
         } catch (IllegalArgumentException e) {
             verifyException(e, "Illegal argument for 'rootName': must be");
