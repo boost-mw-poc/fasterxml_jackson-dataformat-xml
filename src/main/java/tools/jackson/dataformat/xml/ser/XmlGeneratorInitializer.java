@@ -16,7 +16,9 @@ import tools.jackson.databind.cfg.GeneratorInitializer;
  * {@link ObjectWriter#with(GeneratorInitializer)}.
  * It allows output of various document-level things such as
  *<ul>
- * <li>Document Type Declarations (DTD); that is "&lt;!DOCTYPE>" directive 
+ * <li>Document Type Declarations (DTD); that is "&lt;!DOCTYPE>" directive
+ *  </li>
+ * <li>XML Comments (in Document prolog, before the root element)
  *  </li>
  * </ul>
  *<p>
@@ -29,13 +31,42 @@ public class XmlGeneratorInitializer
 {
     protected List<XmlPrologDirective> _directives;
 
+    protected boolean _addLfBetweenPrologDirectives = true;
+
     protected boolean _hasDTD;
 
     @Override
     public void initialize(SerializationConfig config, JsonGenerator g) throws JacksonException {
         if (g instanceof ToXmlGenerator xg) {
-            xg.initProlog(_directives);
+            xg.initProlog(_addLfBetweenPrologDirectives, _directives);
         }
+    }
+
+    /**
+     * Method to change whether line-feeds are to be added between Prolog directives
+     * or not: default being they are (enabled).
+     *
+     * @param addLFs Whether line-feeds are to be added or not (default: {@code true})
+     *
+     * @return This initializer for call chaining
+     */
+    public XmlGeneratorInitializer linefeedsBetweenPrologDirectives(boolean addLFs) {
+        _addLfBetweenPrologDirectives = addLFs;
+        return this;
+    }
+
+    /**
+     * Method for adding XML comment; to be written in position added
+     * with respective to other directives
+     * (but always after XML Declaration which must come before any other output;
+     * and before Document Root element)
+     *
+     * @param commentContent (optional) Comment content to include
+     *
+     * @return This initializer for call chaining
+     */
+    public XmlGeneratorInitializer addComment(String commentContent) {
+        return _add(new Comment(commentContent));
     }
 
     /**
@@ -57,10 +88,10 @@ public class XmlGeneratorInitializer
     }
 
     /**
-     * Method for adding Document Type Declaration (DTD) directive; to write
-     * in order added with respective to other directives (but always after
-     * XML Declaration which most come before any other output; and before
-     * Document Root element)
+     * Method for adding Document Type Declaration (DTD) directive; to
+     * be written in position added with respective to other directives
+     * (but always after XML Declaration which must come before any other output;
+     * and before Document Root element)
      *
      * @param dtd DTD to write
      *

@@ -106,6 +106,14 @@ public class ToXmlGenerator
      */
     protected List<XmlPrologDirective> _prologDirectives;
 
+    /**
+     * Whether linefeed ("pretty-printing") enabled between directives
+     * in Document prolog.
+     *
+     * @since 3.2
+     */
+    protected boolean _lfBetweenPrologDirectives;
+
     /*
     /**********************************************************************
     /* Logical output state
@@ -219,6 +227,22 @@ public class ToXmlGenerator
      */
 
     /**
+     * Method called by {@link XmlGeneratorInitializer} to inject
+     * necessary configuration.
+     *
+     * @since 3.2
+     */
+    public void initProlog(boolean lfBetweenPrologDirectives,
+            List<XmlPrologDirective> directives)
+    {
+        if (_initialized) { // sanity check
+            _reportError("Internal error: cannot call `initConfig()` after generator already initialized");
+        }
+        _lfBetweenPrologDirectives = lfBetweenPrologDirectives;
+        _prologDirectives = directives;
+    }
+
+    /**
      * Method called by {@link XmlSerializationContext} before writing any output,
      * to optionally output XML declaration and other before-root-element
      * nodes (DOCTYPE, processing instructions)
@@ -230,12 +254,10 @@ public class ToXmlGenerator
         }
         _initialized = true;
         try {
-            boolean xmlDeclWritten;
+            final boolean xml11Decl = XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures);
+            if (xml11Decl || XmlWriteFeature.WRITE_XML_DECLARATION.enabledIn(_formatFeatures)) {
 
-            if (XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures)
-                    || XmlWriteFeature.WRITE_XML_DECLARATION.enabledIn(_formatFeatures)) {
-
-                String xmlVersion = XmlWriteFeature.WRITE_XML_1_1.enabledIn(_formatFeatures) ? "1.1" : "1.0";
+                String xmlVersion = xml11Decl ? "1.1" : "1.0";
                 String encoding = "UTF-8";
 
                 if (XmlWriteFeature.WRITE_STANDALONE_YES_TO_XML_DECLARATION.enabledIn(_formatFeatures)) {
@@ -243,16 +265,10 @@ public class ToXmlGenerator
                 } else {
                     _xmlWriter.writeStartDocument(encoding, xmlVersion);
                 }
-                xmlDeclWritten = true;
-            } else {
-                xmlDeclWritten = false;
-            }
-
-            // as per [dataformat-xml#172], try adding indentation
-            if (xmlDeclWritten && (_xmlPrettyPrinter != null)) {
-                // ... but only if it is likely to succeed:
-                if (!_stax2Emulation) {
-                    _xmlPrettyPrinter.writePrologLinefeed(_xmlWriter);
+                // 20-Apr-2026, tatu: for legacy path, only output prolog lf when pretty-printing
+                //    OR _lfBetweenPrologDirectives passed by initializer
+                if (_lfBetweenPrologDirectives || _xmlPrettyPrinter != null) {
+                    _prologLinefeed();
                 }
             }
             if (XmlWriteFeature.AUTO_DETECT_XSI_TYPE.enabledIn(_formatFeatures)) {
@@ -263,6 +279,10 @@ public class ToXmlGenerator
             if (_prologDirectives != null) {
                 for (XmlPrologDirective d : _prologDirectives) {
                     d.write(this, _xmlWriter);
+                    // Add linefeed separators b/w directives
+                    if (_lfBetweenPrologDirectives) {
+                        _prologLinefeed();
+                    }
                 }
             }
 
@@ -271,18 +291,16 @@ public class ToXmlGenerator
         }
     }
 
-    /**
-     * Method called by {@link XmlGeneratorInitializer} to inject
-     * necessary configuration.
-     *
-     * @since 3.2
-     */
-    public void initProlog(List<XmlPrologDirective> directives)
+    // @since 3.2
+    private void _prologLinefeed() throws XMLStreamException
     {
-        if (_initialized) { // sanity check
-            _reportError("Internal error: cannot call `initConfig()` after generator already initialized");
+        if (!_stax2Emulation) {
+            if (_xmlPrettyPrinter != null) {
+                _xmlPrettyPrinter.writePrologLinefeed(_xmlWriter);
+            } else {
+                _xmlWriter.writeSpace("\n");
+            }
         }
-        _prologDirectives = directives;
     }
 
     /*
