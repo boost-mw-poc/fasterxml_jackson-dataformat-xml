@@ -290,7 +290,8 @@ public class ToXmlGenerator
     /**********************************************************************
      */
 
-    @Override public Version version() { return PackageVersion.VERSION; }
+    @Override
+    public Version version() { return PackageVersion.VERSION; }
 
     /*
     /**********************************************************************
