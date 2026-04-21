@@ -104,7 +104,7 @@ public class ToXmlGenerator
      *
      * @since 3.2
      */
-    protected List<XmlPrologDirective> _prologDirectives;
+    protected List<PrologDirective> _prologDirectives;
 
     /**
      * Whether linefeed ("pretty-printing") enabled between directives
@@ -233,7 +233,7 @@ public class ToXmlGenerator
      * @since 3.2
      */
     public void initProlog(boolean lfBetweenPrologDirectives,
-            List<XmlPrologDirective> directives)
+            List<PrologDirective> directives)
     {
         if (_initialized) { // sanity check
             _reportError("Internal error: cannot call `initConfig()` after generator already initialized");
@@ -277,7 +277,7 @@ public class ToXmlGenerator
 
             // 19-Apr-2026, tatu: [dataformat-xml#150] Allow outputting DTD
             if (_prologDirectives != null) {
-                for (XmlPrologDirective d : _prologDirectives) {
+                for (PrologDirective d : _prologDirectives) {
                     d.write(this, _xmlWriter);
                     // Add linefeed separators b/w directives
                     if (_lfBetweenPrologDirectives) {

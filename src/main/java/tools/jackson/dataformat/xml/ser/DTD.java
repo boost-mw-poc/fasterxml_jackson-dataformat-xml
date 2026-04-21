@@ -15,7 +15,7 @@ import tools.jackson.dataformat.xml.util.ArgUtil;
 public record DTD(String rootName,
         String systemId, String publicId,
         String internalSubset)
-    implements XmlPrologDirective
+    implements PrologDirective
 {
     public DTD {
         rootName = ArgUtil.nonEmptyNonNull("rootName", rootName);

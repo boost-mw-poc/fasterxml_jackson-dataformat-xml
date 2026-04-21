@@ -29,7 +29,7 @@ import tools.jackson.databind.cfg.GeneratorInitializer;
 public class XmlGeneratorInitializer
     implements GeneratorInitializer
 {
-    protected List<XmlPrologDirective> _directives;
+    protected List<PrologDirective> _directives;
 
     protected boolean _addLfBetweenPrologDirectives = true;
 
@@ -66,7 +66,7 @@ public class XmlGeneratorInitializer
      * @return This initializer for call chaining
      */
     public XmlGeneratorInitializer addComment(String commentContent) {
-        return _add(new Comment(commentContent));
+        return _add(new PrologComment(commentContent));
     }
 
     /**
@@ -105,7 +105,7 @@ public class XmlGeneratorInitializer
         return _add(dtd);
     }
 
-    protected XmlGeneratorInitializer _add(XmlPrologDirective d) {
+    protected XmlGeneratorInitializer _add(PrologDirective d) {
         if (_directives == null) {
             _directives = new ArrayList<>();
         }

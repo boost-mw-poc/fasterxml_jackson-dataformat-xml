@@ -6,11 +6,12 @@ import org.codehaus.stax2.XMLStreamWriter2;
 
 /**
  * Common API for XML nodes -- Comments, DTDs, Processing Instructions -- to
- * be written <b>before</b> actual XML Document (root node).
+ * be written in Document Prolog (before actual XML Document (root node),
+ * after optional XML Declaration).
  *
  * @since 3.2
  */
-public interface XmlPrologDirective
+public interface PrologDirective
 {
     /**
      * Method to call to actually write out the directive using given

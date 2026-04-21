@@ -179,7 +179,7 @@ public class XmlGeneratorInitializerTest extends XmlTestUtil
                 w.writeValueAsString(new StringBean("test")));
     }
 
-    // Null content is coerced to empty by Comment(String) constructor
+    // Null content is coerced to empty by PrologComment(String) constructor
     @Test
     public void testNullComment() throws Exception
     {
