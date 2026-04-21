@@ -74,6 +74,11 @@ Lon Varscsak (@lonvarscsak)
    if element is in a collection
   (3.2.0)
 
+Ondrej Zizka (@OndraZizka)
+ * Requested #452: Allow adding `<?xml-stylesheet ...>` declarations (Processing
+   Instructions)
+  (3.2.0)
+
 Jiri Mikulasek (@jimirocks)
  * Reported #455: Can't deserialize list in JsonSubtype when type property is visible
   (3.2.0)

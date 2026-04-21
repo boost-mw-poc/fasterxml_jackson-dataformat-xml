@@ -54,6 +54,10 @@ Version: 3.x (for earlier see VERSION-2.x)
   if element is in a collection
  (reported by Lon V)
  (fix by @cowtowncoder, w/ Claude code)
+#452: Allow adding `<?xml-stylesheet ...>` declarations (Processing
+  Instructions)
+ (requested by Ondrej Z)
+ (fix by @cowtowncoder)
 #455: Can't deserialize list in JsonSubtype when type property is visible
  (reported by Jiri M)
  (fix by @cowtowncoder, w/ Claude code)
