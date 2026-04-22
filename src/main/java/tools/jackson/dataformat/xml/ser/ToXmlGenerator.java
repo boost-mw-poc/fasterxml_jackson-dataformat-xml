@@ -707,13 +707,25 @@ public class ToXmlGenerator
         if (_nextName == null) {
             handleMissingName();
         }
+        // 20-Apr-2026, tatu: special handling for Root Element...
+        final boolean isRoot = _elementNameStack.isEmpty();
         // Need to keep track of names to make Lists work correctly
         _elementNameStack.addLast(_nextName);
         try {
-            _xmlWriter.writeStartElement(_nextName.getNamespaceURI(), _nextName.getLocalPart());
+            if (isRoot) {
+                _handleStartRootObject(_nextName);
+            } else {
+                _xmlWriter.writeStartElement(_nextName.getNamespaceURI(), _nextName.getLocalPart());
+            }
         } catch (XMLStreamException e) {
             StaxUtil.throwAsWriteException(e, this);
         }
+    }
+
+    // @since 3.2
+    protected void _handleStartRootObject(QName rootElemName) throws XMLStreamException {
+        // !!! TODO: special handling
+        _xmlWriter.writeStartElement(_nextName.getNamespaceURI(), _nextName.getLocalPart());
     }
     
     // note: public just because pretty printer needs to make a callback
