@@ -10,6 +10,8 @@ import tools.jackson.core.exc.StreamWriteException;
 import tools.jackson.databind.*;
 import tools.jackson.databind.cfg.GeneratorInitializer;
 
+import tools.jackson.dataformat.xml.XmlWriteFeature;
+
 /**
  * Default {@link GeneratorInitializer} implementation to use with
  * {@link ToXmlGenerator}, registered via
@@ -20,7 +22,11 @@ import tools.jackson.databind.cfg.GeneratorInitializer;
  *  </li>
  * <li>Comments (in Document prolog, before the root element)
  *  </li>
+ * <li>Namespace bindings (prefix to URI mappings)
+ *  </li>
  * <li>Processing Instructions (PIs; in Document prolog, before the root element)
+ *  </li>
+ * <li>XML Declaration (with custom version, encoding and/or standalone value)
  *  </li>
  * </ul>
  *<p>
@@ -41,6 +47,11 @@ public class XmlGeneratorInitializer
      */
     protected List<NamespaceBinding> _namespaceBindings;
 
+    /**
+     * Custom XML declaration to write.
+     */
+    protected XmlDeclaration _xmlDeclaration;
+
     protected boolean _addLfBetweenPrologDirectives = true;
 
     protected boolean _hasDTD;
@@ -48,7 +59,8 @@ public class XmlGeneratorInitializer
     @Override
     public void initialize(SerializationConfig config, JsonGenerator g) throws JacksonException {
         if (g instanceof ToXmlGenerator xg) {
-            xg.initDocument(_addLfBetweenPrologDirectives, _directives,
+            xg.initDocument(_xmlDeclaration,
+                    _addLfBetweenPrologDirectives, _directives,
                     _namespaceBindings);
         }
     }
@@ -163,6 +175,63 @@ public class XmlGeneratorInitializer
             _namespaceBindings = new ArrayList<>();
         }
         _namespaceBindings.add(new NamespaceBinding(prefix, namespaceURI));
+        return this;
+    }
+
+    /**
+     * Method for specifying custom XML declaration to write.
+     *<p>
+     * When a custom XML declaration is registered it fully replaces output
+     * that would otherwise be produced by
+     * {@link XmlWriteFeature#WRITE_XML_DECLARATION},
+     * {@link XmlWriteFeature#WRITE_XML_1_1} and
+     * {@link XmlWriteFeature#WRITE_STANDALONE_YES_TO_XML_DECLARATION}:
+     * those format features are ignored. Note that caller is responsible
+     * for ensuring the declared encoding matches the encoding the
+     * underlying {@code Writer} or {@code OutputStream} actually uses.
+     *
+     * @param version XML version: either "1.0" or "1.1"
+     * @param encoding {@code encoding} content will be encoded in: usually "UTF-8"
+     *
+     * @return This initializer for call chaining
+     */
+    public XmlGeneratorInitializer addXmlDeclaration(String version, String encoding) {
+        return addXmlDeclaration(new XmlDeclaration(version, encoding, null));
+    }
+
+    /**
+     * Method for specifying custom XML declaration to write.
+     *<p>
+     * See {@link #addXmlDeclaration(String, String)} for details on how
+     * this interacts with {@link XmlWriteFeature} flags.
+     *
+     * @param version XML version: either "1.0" or "1.1"
+     * @param encoding {@code encoding} content will be encoded in: usually "UTF-8"
+     * @param standalone {@code standalone} pseudo-attribute value to write
+     *
+     * @return This initializer for call chaining
+     */
+    public XmlGeneratorInitializer addXmlDeclaration(String version, String encoding,
+            boolean standalone) {
+        return addXmlDeclaration(new XmlDeclaration(version, encoding, standalone));
+    }
+
+    /**
+     * Method for specifying custom XML declaration to write.
+     *<p>
+     * See {@link #addXmlDeclaration(String, String)} for details on how
+     * this interacts with {@link XmlWriteFeature} flags.
+     *
+     * @param xmlDeclaration declaration to write
+     *
+     * @return This initializer for call chaining
+     */
+    public XmlGeneratorInitializer addXmlDeclaration(XmlDeclaration xmlDeclaration) {
+        if (_xmlDeclaration != null) {
+            throw new StreamWriteException(null,
+                    "Cannot add another XML Declaration, initializer already has one");
+        }
+        _xmlDeclaration = xmlDeclaration;
         return this;
     }
 
