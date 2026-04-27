@@ -651,6 +651,7 @@ public class ToXmlGenerator
     public JsonGenerator writeStartArray() throws JacksonException
     {
         _verifyValueWrite("start an array");
+        _verifyNotNestedArray();
         _streamWriteContext = _streamWriteContext.createChildArrayContext(null);
         streamWriteConstraints().validateNestingDepth(_streamWriteContext.getNestingDepth());
         if (_xmlPrettyPrinter != null) {
@@ -660,19 +661,35 @@ public class ToXmlGenerator
         }
         return this;
     }
-    
+
     @Override
     public JsonGenerator writeStartArray(Object currValue) throws JacksonException
     {
         _verifyValueWrite("start an array");
+        _verifyNotNestedArray();
         _streamWriteContext = _streamWriteContext.createChildArrayContext(currValue);
         streamWriteConstraints().validateNestingDepth(_streamWriteContext.getNestingDepth());
         if (_xmlPrettyPrinter != null) {
             _xmlPrettyPrinter.writeStartArray(this);
         } else {
-            // nothing to do here; no-operation
+            // nothing to do here; no-op
         }
         return this;
+    }
+
+    // [dataformat-xml#556]: nested arrays/Collections/Maps cannot be expressed
+    // in natural-style XML without an intermediate POJO. Fail fast (when the
+    // feature is enabled) instead of silently flattening dimensions.
+    //
+    // @since 3.2
+    private void _verifyNotNestedArray() throws JacksonException
+    {
+        if (_streamWriteContext.inArray()
+                && XmlWriteFeature.FAIL_ON_NESTED_ARRAYS.enabledIn(_formatFeatures)) {
+            _reportError("XML format does not support nested arrays/Collections;"
+                    + " wrap inner array in a POJO"
+                    + " (disable XmlWriteFeature.FAIL_ON_NESTED_ARRAYS to allow legacy flattening)");
+        }
     }
 
     @Override
