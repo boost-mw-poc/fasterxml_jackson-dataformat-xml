@@ -6,7 +6,7 @@ Project: jackson-dataformat-xml
 
 2.22.0 (not yet released)
 
-#863: Fix to support Woodstox 7.2.0 (but no dep version bump)
+#863: Fix to support Woodstox 7.2.0
 
 2.21.3 (28-Apr-2026)
 2.21.2 (20-Mar-2026)
