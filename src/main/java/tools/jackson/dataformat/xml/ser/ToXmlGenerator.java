@@ -1026,7 +1026,7 @@ public class ToXmlGenerator
             _reportUnimplementedStax2("writeRaw");
         }
         try {
-            // Woodstox 7.2.0 regression: writeRaw does not close pending start element; force it
+            // Woodstox 7.2.0 change: writeRaw does not close pending start element; force it
             _xmlWriter.writeCharacters("");
             _xmlWriter.writeRaw(text);
         } catch (XMLStreamException e) {
@@ -1086,6 +1086,8 @@ public class ToXmlGenerator
             if (comment != null) {
                 _xmlWriter.writeComment(comment);
             } else {
+                // Woodstox 7.2.0 regression: writeSpace does not close pending start element; force it
+                _xmlWriter.writeCharacters("");
                 _xmlWriter.writeSpace("\n");
             }
         } catch (XMLStreamException e) {
