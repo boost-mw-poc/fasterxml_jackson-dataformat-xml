@@ -820,7 +820,7 @@ public class ToXmlGenerator
             _reportUnimplementedStax2("writeRaw");
         }
         try {
-            // Woodstox 7.2.0 regression: writeRaw does not close pending start element; force it
+            // Woodstox 7.2.0 change: writeRaw does not close pending start element; force it
             _xmlWriter.writeCharacters("");
             _xmlWriter.writeRaw(text);
         } catch (XMLStreamException e) {
