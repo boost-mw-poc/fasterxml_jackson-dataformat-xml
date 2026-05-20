@@ -48,6 +48,10 @@ No changes since 2.19.1
  (contributed by @duoduobingbing)
 - Upgrade Woodstox to 7.1.0
 
+2.18.8 (not yet released)
+
+#863: Fix to support Woodstox 7.2.0 (but no dep version bump)
+
 2.18.7 (26-Apr-2026)
 2.18.6 (22-Feb-2026)
 2.18.5 (27-Oct-2025)
