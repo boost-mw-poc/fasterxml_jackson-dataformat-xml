@@ -27,6 +27,6 @@ This is important to give us time to provide a patch, if necessary, for the prob
 
 To verify that any given Jackson artifact has been signed with a valid key, have a look at `KEYS` file of the main Jackson repo:
 
-https://github.com/FasterXML/jackson/blob/master/KEYS
+https://github.com/FasterXML/jackson/blob/main/KEYS
 
 which lists all known valid keys in use.
