@@ -48,6 +48,9 @@ Version: 3.x (for earlier see VERSION-2.x)
   a `DeserializerModifier` that delegates
  (reported by Ruven C)
  (fix by @cowtowncoder, w/ Claude code)
+#344: Unable to (de)serialize `null` in polymorphic Collection
+ (reported by @miroch41)
+ (fix by @cowtowncoder, w/ Claude code)
 #358: Allow skipping attributes from the `http://www.w3.org/2001/XMLSchema-instance`
   namespace (with new `XmlReadFeature.SKIP_UNKNOWN_XSI_ATTRIBUTES`)
  (requested by Eduard W)
