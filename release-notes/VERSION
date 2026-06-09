@@ -5,7 +5,11 @@ Version: 3.x (for earlier see VERSION-2.x)
 === Releases === 
 ------------------------------------------------------------------------
 
-3.2.0 (not yet released)
+3.3.0 (not yet released)
+
+No changes since 3.2
+
+3.2.0 (08-Jun-2026)
 
 #8: Serialization of `List` incorrect if property declared as plain `java.lang.Object`
  (fix by @cowtowncoder, w/ Claude code)
