@@ -164,6 +164,10 @@ No changes since 3.2
   deserialize list (skips virtual wrapping)
  (fix by @cowtowncoder, w/ Claude code)
 
+3.1.5 (07-Jul-2026)
+
+No changes since 3.1.4
+
 3.1.4 (29-May-2026)
 
 #863: Fix to support Woodstox 7.2.0 (but no dep version bump)
