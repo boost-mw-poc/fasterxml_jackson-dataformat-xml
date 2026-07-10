@@ -10,7 +10,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 #873: Fix handling of `@JsonApplyView`
  (fix by @cowtowncoder, w/ Claude code)
 
-3.2.1 (not yet released)
+3.2.1 (10-Jul-2026)
 
 #871: `XmlMapper` regression in 3.2.0: `xsi:nil` collection element on unwrapped
   collection wrongly read as null collection (instead of collection with one
@@ -164,6 +164,10 @@ Version: 3.x (for earlier see VERSION-2.x)
 #857: `@JacksonXmlText` with unwrapped Collection property fails to
   deserialize list (skips virtual wrapping)
  (fix by @cowtowncoder, w/ Claude code)
+
+3.1.5 (07-Jul-2026)
+
+No changes since 3.1.4
 
 3.1.4 (29-May-2026)
 
