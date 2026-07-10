@@ -9,7 +9,7 @@ Version: 3.x (for earlier see VERSION-2.x)
 
 No changes since 3.2
 
-3.2.1 (not yet released)
+3.2.1 (10-Jul-2026)
 
 #871: `XmlMapper` regression in 3.2.0: `xsi:nil` collection element on unwrapped
   collection wrongly read as null collection (instead of collection with one
