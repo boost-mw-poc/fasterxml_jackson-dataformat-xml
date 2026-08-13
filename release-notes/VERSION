@@ -15,6 +15,8 @@ No changes since 3.2
   `@JsonIgnore`-annotated getter
  (reported by @soc)
  (fix by @cowtowncoder, w/ Claude code)
+#891: Enforce `StreamReadConstraints.maxNestingDepth` in `FromXmlParser`
+ (contributed by @Sahana2524)
 
 3.2.1 (10-Jul-2026)
 
@@ -170,6 +172,11 @@ No changes since 3.2
 #857: `@JacksonXmlText` with unwrapped Collection property fails to
   deserialize list (skips virtual wrapping)
  (fix by @cowtowncoder, w/ Claude code)
+
+3.1.6 (not yet released)
+
+#891: Enforce `StreamReadConstraints.maxNestingDepth` in `FromXmlParser`
+ (contributed by @Sahana2524)
 
 3.1.5 (07-Jul-2026)
 

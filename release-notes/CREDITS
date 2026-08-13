@@ -157,3 +157,8 @@ Christian Beikov (@beikov)
  * Reported #884: `NullPointerException` in `XmlValueInstantiators` for Record
    with `@JsonIgnore`-annotated getter
   (3.2.2)
+
+Sahana (@Sahana2524)
+ * Contributed #891: Enforce `StreamReadConstraints.maxNestingDepth` in
+   `FromXmlParser`
+  (3.1.6)
