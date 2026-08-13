@@ -276,3 +276,9 @@ Bas Passon (@bpasson)
 
 * Contributed #745: Add feature to include `standalone='yes'` in xml declaration
  (2.19.0)
+
+Sahana (@Sahana2524)
+
+* Contributed #891: Enforce `StreamReadConstraints.maxNestingDepth` in
+  `FromXmlParser`
+ (2.18.10)
