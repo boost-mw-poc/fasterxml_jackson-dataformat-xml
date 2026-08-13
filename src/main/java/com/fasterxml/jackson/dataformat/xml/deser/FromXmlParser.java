@@ -715,10 +715,10 @@ public class FromXmlParser
 
             switch (t) {
             case START_OBJECT:
-                _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                _createChildObjectContext();
                 break;
             case START_ARRAY:
-                _parsingContext = _parsingContext.createChildArrayContext(-1, -1);
+                _createChildArrayContext();
                 break;
             case END_OBJECT:
             case END_ARRAY:
@@ -751,7 +751,7 @@ public class FromXmlParser
             if (_mayBeLeaf) {
                 // leave _mayBeLeaf set, as we start a new context
                 _nextToken = JsonToken.FIELD_NAME;
-                _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                _createChildObjectContext();
                 return _updateToken(JsonToken.START_OBJECT);
             }
             if (_parsingContext.inArray()) {
@@ -787,7 +787,7 @@ public class FromXmlParser
                         // 06-Jan-2015, tatu: as per [dataformat-xml#180], need to
                         //    expose as empty Object, not null
                         _nextToken = JsonToken.END_OBJECT;
-                        _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                        _createChildObjectContext();
                         return _updateToken(JsonToken.START_OBJECT);
                     }
                     // 07-Sep-2019, tatu: for [dataformat-xml#353], must NOT return second null
@@ -807,7 +807,7 @@ public class FromXmlParser
                     _mayBeLeaf = false;
                     _nextToken = JsonToken.FIELD_NAME;
                     _currText = _xmlTokens.getText();
-                    _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                    _createChildObjectContext();
                     return _updateToken(JsonToken.START_OBJECT);
                 }
                 _parsingContext.setCurrentName(_xmlTokens.getLocalName());
@@ -837,7 +837,7 @@ public class FromXmlParser
                                 //    expose as empty Object, not null (or, worse, as used to
                                 //    be done, by swallowing the token)
                                 _nextToken = JsonToken.END_OBJECT;
-                                _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                                _createChildObjectContext();
                                 return _updateToken(JsonToken.START_OBJECT);
                             }
                         }
@@ -851,7 +851,7 @@ XmlTokenStream.XML_END_ELEMENT, XmlTokenStream.XML_START_ELEMENT, token));
                     // fall-through, except must create new context AND push back
                     // START_ELEMENT we just saw:
                     _xmlTokens.pushbackCurrentToken();
-                    _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                    _createChildObjectContext();
                 }
                 // [dataformat-xml#177]: empty text may also need to be skipped
                 // but... [dataformat-xml#191]: looks like we can't short-cut, must
@@ -945,7 +945,7 @@ XmlTokenStream.XML_END_ELEMENT, XmlTokenStream.XML_START_ELEMENT, token));
         while (token == XmlTokenStream.XML_START_ELEMENT) {
             if (_mayBeLeaf) {
                 _nextToken = JsonToken.FIELD_NAME;
-                _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                _createChildObjectContext();
                 _updateToken(JsonToken.START_OBJECT);
                 return null;
             }
@@ -989,7 +989,7 @@ XmlTokenStream.XML_END_ELEMENT, XmlTokenStream.XML_START_ELEMENT, token));
                 _mayBeLeaf = false;
                 _nextToken = JsonToken.FIELD_NAME;
                 _currText = _xmlTokens.getText();
-                _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+                _createChildObjectContext();
                 _updateToken(JsonToken.START_OBJECT);
             } else {
                 _parsingContext.setCurrentName(_xmlTokens.getLocalName());
@@ -1028,14 +1028,14 @@ XmlTokenStream.XML_END_ELEMENT, XmlTokenStream.XML_START_ELEMENT, token));
     }
 
 
-    private void _updateState(JsonToken t)
+    private void _updateState(JsonToken t) throws IOException
     {
         switch (t) {
         case START_OBJECT:
-            _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+            _createChildObjectContext();
             break;
         case START_ARRAY:
-            _parsingContext = _parsingContext.createChildArrayContext(-1, -1);
+            _createChildArrayContext();
             break;
         case END_OBJECT:
         case END_ARRAY:
@@ -1047,6 +1047,21 @@ XmlTokenStream.XML_END_ELEMENT, XmlTokenStream.XML_START_ELEMENT, token));
         default:
             _internalErrorUnknownToken(t);
         }
+    }
+
+    // Enter a nested Object/Array scope, honoring the configured
+    // StreamReadConstraints.maxNestingDepth(). JsonReadContext has always
+    // tracked the depth but the read path never checked it, so a configured
+    // limit had no effect on XML input; ToXmlGenerator already does the
+    // equivalent check on the write side.
+    private void _createChildObjectContext() throws IOException {
+        _parsingContext = _parsingContext.createChildObjectContext(-1, -1);
+        streamReadConstraints().validateNestingDepth(_parsingContext.getNestingDepth());
+    }
+
+    private void _createChildArrayContext() throws IOException {
+        _parsingContext = _parsingContext.createChildArrayContext(-1, -1);
+        streamReadConstraints().validateNestingDepth(_parsingContext.getNestingDepth());
     }
 
     /*

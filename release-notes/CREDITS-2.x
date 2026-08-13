@@ -271,3 +271,9 @@ Bas Passon (@bpasson)
 * Reported, contributed fix for #646: Deserializing fails when using builder classes
   with `Iterable` Collection setters
  (2.17.1)
+
+Sahana (@Sahana2524)
+
+* Contributed #891: Enforce `StreamReadConstraints.maxNestingDepth` in
+  `FromXmlParser`
+ (2.18.10)
