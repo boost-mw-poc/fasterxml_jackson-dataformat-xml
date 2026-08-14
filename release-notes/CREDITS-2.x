@@ -281,3 +281,9 @@ Bas Passon (@bpasson)
 * Contributed #768: `FromXmlParser` lacks extension point for passing
   custom `XmlTokenStream`
  (2.20.0)
+
+Sahana (@Sahana2524)
+
+* Contributed #891: Enforce `StreamReadConstraints.maxNestingDepth` in
+  `FromXmlParser`
+ (2.18.10)
