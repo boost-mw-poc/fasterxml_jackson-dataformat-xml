@@ -4,6 +4,10 @@ Project: jackson-dataformat-xml
 === Releases ===
 ------------------------------------------------------------------------
 
+2.18.11 (not yet released)
+
+- Fix build to avoid past-JDK-8 bytecode generation
+
 2.18.10 (15-Aug-2026)
 
 #891: Enforce `StreamReadConstraints.maxNestingDepth` in `FromXmlParser`
