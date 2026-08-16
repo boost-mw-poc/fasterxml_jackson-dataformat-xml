@@ -4,7 +4,7 @@ Project: jackson-dataformat-xml
 === Releases ===
 ------------------------------------------------------------------------
 
-2.18.10 (not yet released)
+2.18.10 (15-Aug-2026)
 
 #891: Enforce `StreamReadConstraints.maxNestingDepth` in `FromXmlParser`
  (contributed by @Sahana2524)
