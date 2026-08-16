@@ -207,6 +207,36 @@ alternative support for serializing POJOs as XML and deserializing XML as POJOs.
 
   <profiles>
     <profile>
+      <!-- Guarantee Java 8 compatible main classes even when the build runs on a
+           later JDK: "release 8" pins both the bytecode version (52) and the
+           visible JDK API, unlike inherited source/target 1.8 which only pins
+           bytecode. Cannot be enabled unconditionally since javac 8 itself has
+           no "release" option, hence activation on JDK 9 and above.
+        -->
+      <id>java8-bytecode</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <inherited>true</inherited>
+            <executions>
+              <execution>
+                <id>default-compile</id>
+                <configuration>
+                  <release>8</release>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
       <!-- And different set up for JDK 17 and above -->
       <id>java17</id>
       <activation>
@@ -236,16 +266,25 @@ alternative support for serializing POJOs as XML and deserializing XML as POJOs.
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <inherited>true</inherited>
-            <configuration>
-              <!-- Enable Java 17 for all sources so that Intellij picks the right language level -->
-              <source>17</source>
-              <release>17</release>
-              <compilerArgs>
-                <arg>-parameters</arg>
-                <arg>--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
-                <arg>--add-opens=java.base/java.util=ALL-UNNAMED</arg>
-              </compilerArgs>
-            </configuration>
+            <executions>
+              <execution>
+                <!-- Enable Java 17 for TEST sources only (needs "src/test-jdk17/java"
+                     above); main sources must keep producing Java 8 bytecode no matter
+                     which JDK the build runs on, so this must NOT be plugin-level
+                     configuration (which would apply to "default-compile" too)
+                  -->
+                <id>default-testCompile</id>
+                <configuration>
+                  <source>17</source>
+                  <release>17</release>
+                  <compilerArgs>
+                    <arg>-parameters</arg>
+                    <arg>--add-opens=java.base/java.lang=ALL-UNNAMED</arg>
+                    <arg>--add-opens=java.base/java.util=ALL-UNNAMED</arg>
+                  </compilerArgs>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
