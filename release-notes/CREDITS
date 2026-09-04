@@ -28,3 +28,8 @@ Sahana (@Sahana2524)
 * Contributed #891: Enforce `StreamReadConstraints.maxNestingDepth` in
   `FromXmlParser`
  (3.1.6)
+
+* Fixed #894: `ToXmlGenerator.writeBinary(Base64Variant, InputStream, int)` fails
+  with `NegativeArraySizeException`/`IndexOutOfBoundsException` for unknown
+  (negative) length
+ (3.1.7)
